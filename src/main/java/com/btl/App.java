@@ -7,30 +7,53 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.StageStyle;
 
 /**
  * JavaFX App
  */
 public class App extends Application {
+    private double x = 0;
+    private double y = 0;
 
-    private static Scene scene;
-
+    /**
+     * start function.
+     * @param stage stage
+     * @throws IOException
+     */
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("loginScene"), 640, 480);
+        Parent root = FXMLLoader.load(getClass().getResource("loginScene.fxml"));
+                
+        Scene scene = new Scene(root);
+        
+        root.setOnMousePressed((MouseEvent event) ->{
+           x = event.getSceneX();
+           y = event.getSceneY();
+        });
+        
+        root.setOnMouseDragged((MouseEvent event) ->{
+            stage.setX(event.getScreenX() - x);
+            stage.setY(event.getScreenY() - y);
+            
+            stage.setOpacity(.8);
+        });
+        
+        root.setOnMouseReleased((MouseEvent event) ->{
+            stage.setOpacity(1);
+        });
+        
+        stage.initStyle(StageStyle.TRANSPARENT);
+        
         stage.setScene(scene);
         stage.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
-    }
-
+    /**
+     * main function.
+     * @param args array 
+     */
     public static void main(String[] args) {
         launch();
     }

@@ -11,11 +11,22 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.btl.loginController">
    <children>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+      <AnchorPane fx:id="login_form" prefHeight="200.0" prefWidth="200.0">
          <children>
             <AnchorPane layoutY="3.0" prefHeight="400.0" prefWidth="300.0">
                <children>
-                  <FontAwesomeIconView glyphName="USER_CIRCLE" layoutX="102.0" layoutY="148.0" size="8em" />
+                  <FontAwesomeIconView glyphName="CUBE" layoutX="82.0" layoutY="148.0" size="8em" />
+                  <Label layoutX="121.0" layoutY="187.0" text="DICE">
+                     <font>
+                        <Font name="Arial Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIconView glyphName="BOOK" layoutX="151.0" layoutY="165.0" size="6EM" />
+                  <Label layoutX="87.0" layoutY="224.0" text="Dictionary of English">
+                     <font>
+                        <Font name="Tahoma" size="14.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
             <AnchorPane layoutX="300.0" layoutY="2.0" prefHeight="400.0" prefWidth="300.0">
@@ -25,10 +36,18 @@
                         <Font name="Tahoma Bold" size="17.0" />
                      </font>
                   </Label>
-                  <TextField layoutX="40.0" layoutY="162.0" prefHeight="30.0" prefWidth="220.0" promptText="Username" />
-                  <PasswordField layoutX="40.0" layoutY="200.0" prefHeight="30.0" prefWidth="220.0" promptText="Password" />
-                  <Button layoutX="40.0" layoutY="275.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="220.0" text="Login" />
-                  <Button layoutX="40.0" layoutY="313.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="220.0" text="Forgot password" />
+                  <TextField fx:id="username" layoutX="40.0" layoutY="162.0" onAction="#loginController" prefHeight="30.0" prefWidth="220.0" promptText="Username" />
+                  <PasswordField fx:id="password" layoutX="40.0" layoutY="200.0" onAction="#loginController" prefHeight="30.0" prefWidth="220.0" promptText="Password" />
+                  <Button fx:id="loginBtn" layoutX="40.0" layoutY="275.0" mnemonicParsing="false" onAction="#loginController" prefHeight="30.0" prefWidth="220.0" text="Login" />
+                  <Button fx:id="forgotPassBtn" layoutX="40.0" layoutY="313.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="220.0" text="Forgot password" />
+                  <Button fx:id="close" layoutX="235.0" layoutY="14.0" mnemonicParsing="false" onAction="#close" prefHeight="24.0" prefWidth="50.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <graphic>
+                        <FontAwesomeIconView glyphName="CLOSE" size="1.2em" />
+                     </graphic>
+                  </Button>
                </children>
             </AnchorPane>
          </children>
