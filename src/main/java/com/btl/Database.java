@@ -9,13 +9,17 @@ public class Database {
      * developing
      * @return 
      */
-    public Connection connectDb() {
+    public static Connection connectDb() {
         
         try{
             Class.forName("com.mysql.jdbc.Driver");
             
-            Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/account", "root", "");
-        }catch(Exception e){e.printStackTrace();}
+            Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3307/account", "root", "");
+            
+            return connect;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         return null;
     }
 }

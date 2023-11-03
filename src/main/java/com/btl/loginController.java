@@ -12,6 +12,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -24,6 +26,9 @@ public class loginController implements Initializable{
 
     @FXML
     private Button close;
+    
+    @FXML
+    private Button createAccountBtn;
 
     @FXML
     private Button forgotPassBtn;
@@ -49,36 +54,60 @@ public class loginController implements Initializable{
     private double y = 0;
     
     /**
-     * control login feature. developing.
-     * @param event
+     * control login feature.
      */
-    public void loginController() throws IOException {
-        loginBtn.getScene().getWindow().hide();
-        Parent root = FXMLLoader.load(getClass().getResource("menu.fxml"));
+    public void loginController() {
+        String sql = "SELECT * FROM account_data WHERE username = ? and password = ?";
         
-        Stage stage = new Stage();
-        Scene scene = new Scene(root);
+        connect = Database.connectDb();
         
-        root.setOnMousePressed((MouseEvent event) ->{
-           x = event.getSceneX();
-           y = event.getSceneY();
-        });
-        
-        root.setOnMouseDragged((MouseEvent event) ->{
-            stage.setX(event.getScreenX() - x);
-            stage.setY(event.getScreenY() - y);
+        try{
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, username.getText());
+            prepare.setString(2, password.getText());
             
-            stage.setOpacity(.8);
-        });
-        
-        root.setOnMouseReleased((MouseEvent event) ->{
-            stage.setOpacity(1);
-        });
-        
-        stage.initStyle(StageStyle.TRANSPARENT);
-    
-        stage.setScene(scene);
-        stage.show();
+            result = prepare.executeQuery();
+            Alert alert;
+            
+            if(username.getText().isEmpty() || password.getText().isEmpty()){
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+            }else{
+                if(result.next()){
+                    getAccountData.username = username.getText();
+                    
+                    loginBtn.getScene().getWindow().hide();
+                    Parent root = FXMLLoader.load(getClass().getResource("menu.fxml"));
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    
+                    root.setOnMousePressed((MouseEvent event) ->{
+                        x = event.getSceneX();
+                        y = event.getSceneY();
+                    });
+                    
+                    root.setOnMouseDragged((MouseEvent event) ->{
+                        stage.setX(event.getScreenX() - x);
+                        stage.setY(event.getScreenY() - y);
+                    });
+                    
+                    stage.initStyle(StageStyle.TRANSPARENT);
+                    stage.setScene(scene);
+                    stage.show();
+                    
+                }else{
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Wrong Username/Password");
+                    alert.showAndWait();
+                }
+            }
+            
+        }catch(Exception e){e.printStackTrace();}
     }
     
     /**
@@ -89,13 +118,13 @@ public class loginController implements Initializable{
     }
 
     /**
-     * developing.
+     * .
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        // nothing to do here.
     }
     
 
