@@ -126,6 +126,4 @@ public class loginController implements Initializable{
     public void initialize(URL url, ResourceBundle rb) {
         // nothing to do here.
     }
-    
-
 }

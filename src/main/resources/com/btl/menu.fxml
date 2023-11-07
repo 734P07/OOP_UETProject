@@ -9,6 +9,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -18,7 +19,7 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.btl.menuController">
    <children>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+      <AnchorPane fx:id="main_form" prefHeight="200.0" prefWidth="200.0">
          <children>
             <BorderPane layoutX="97.0" layoutY="115.0" prefHeight="600.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <top>
@@ -58,7 +59,7 @@
                                     <Font name="Tahoma" size="17.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER" layoutX="11.0" layoutY="157.0" prefHeight="25.0" prefWidth="190.0" text="User" textFill="WHITE">
+                              <Label fx:id="username" alignment="CENTER" layoutX="11.0" layoutY="157.0" prefHeight="25.0" prefWidth="190.0" text="User" textFill="WHITE">
                                  <font>
                                     <Font name="Tahoma Bold" size="20.0" />
                                  </font>
@@ -120,7 +121,7 @@
                <center>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane layoutX="44.0" layoutY="61.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="home_form" layoutX="44.0" layoutY="61.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="15.0" prefHeight="526.0" prefWidth="862.0" stylesheets="@menuDesign.css">
                                  <children>
@@ -172,7 +173,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane layoutX="44.0" layoutY="65.0" prefHeight="555.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="search_form" layoutX="44.0" layoutY="65.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="28.0" layoutY="25.0" prefHeight="506.0" prefWidth="399.0" stylesheets="@menuDesign.css">
                                  <styleClass>
@@ -194,6 +195,40 @@
                                     <String fx:value="white-bg" />
                                     <String fx:value="shadow" />
                                  </styleClass>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="translate_form" layoutX="64.0" layoutY="30.0" prefHeight="555.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane layoutX="14.0" layoutY="15.0" prefHeight="526.0" prefWidth="862.0" stylesheets="@menuDesign.css">
+                                 <styleClass>
+                                    <String fx:value="white-bg" />
+                                    <String fx:value="shadow" />
+                                 </styleClass>
+                                 <children>
+                                    <TextArea fx:id="translate_beforeTranslate" layoutX="32.0" layoutY="66.0" prefHeight="397.0" prefWidth="379.0" />
+                                    <Button fx:id="translate_swapBtn" layoutX="414.0" layoutY="16.0" mnemonicParsing="false">
+                                       <graphic>
+                                          <FontAwesomeIconView glyphName="EXCHANGE" size="1.5em" />
+                                       </graphic>
+                                    </Button>
+                                    <Label fx:id="translate_beforeLanguage" layoutX="200.0" layoutY="20.0" text="English">
+                                       <font>
+                                          <Font name="Tahoma" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="translate_afterLanguage" layoutX="606.0" layoutY="20.0" text="Vietnamese">
+                                       <font>
+                                          <Font name="Tahoma" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextArea fx:id="translate_afterTranslate" layoutX="453.0" layoutY="65.0" prefHeight="397.0" prefWidth="379.0" />
+                                    <Button fx:id="translate_translateBtn" layoutX="756.0" layoutY="484.0" mnemonicParsing="false" onAction="#translateTranslate" text="Translate">
+                                       <font>
+                                          <Font name="Tahoma" size="14.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
                               </AnchorPane>
                            </children>
                         </AnchorPane>

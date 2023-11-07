@@ -14,7 +14,7 @@ public class Database {
         try{
             Class.forName("com.mysql.jdbc.Driver");
             
-            Connection connect = DriverManager.getConnection("jdbc:mysql://localhost:3307/account", "root", "");
+            Connection connect = DriverManager.getConnection("jdbc:mysql://db4free.net/dicedatabase", "dicename", "dicename");
             
             return connect;
         }catch(Exception e){
