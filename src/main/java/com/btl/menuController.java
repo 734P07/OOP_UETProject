@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -22,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -188,6 +190,15 @@ public class menuController implements Initializable {
             this.translate_afterTranslate.setText(output);
         }
         conn.disconnect();
+    }
+    
+    public void translateSwap() {
+        String temp = translate_beforeLanguage.getText();
+        translate_beforeLanguage.setText(translate_afterLanguage.getText());
+        translate_afterLanguage.setText(temp);
+        
+        translate_beforeLanguage.setAlignment(Pos.BASELINE_CENTER);
+        translate_afterLanguage.setAlignment(Pos.BASELINE_CENTER);
     }
     
     /**
