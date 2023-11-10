@@ -1,12 +1,6 @@
 package com.btl;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -23,9 +17,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import app.jackychu.api.simplegoogletranslate.Language;
+import app.jackychu.api.simplegoogletranslate.SimpleGoogleTranslate;
 
 public class menuController implements Initializable {
     @FXML
@@ -69,10 +64,6 @@ public class menuController implements Initializable {
     
     private double x = 0;
     private double y = 0;
-    
-    private static final String CLIENT_ID = "FREE_TRIAL_ACCOUNT";
-    private static final String CLIENT_SECRET = "PUBLIC_SECRET";
-    private static final String ENDPOINT = "http://api.whatsmate.net/v1/translation/translate";
     
     /**
      *  close program.
@@ -134,64 +125,53 @@ public class menuController implements Initializable {
     
     /**
      * translate button.
+     * @throws java.lang.Exception
      */
     public void translateTranslate() throws Exception {
-        String fromLang;
-        String toLang;
+        Language fromLang;
+        Language toLang;
+        translate_afterTranslate.clear();
         
         if(translate_beforeLanguage.getText().equals("English")){
-            fromLang = "en";
-            toLang = "vi";
+            fromLang = Language.en;
+            toLang = Language.vi;
         } else {
-            fromLang = "vi";
-            toLang = "en";
+            fromLang = Language.vi;
+            toLang = Language.en;
         }
-        String text = translate_beforeTranslate.getText();
-
-        translate(fromLang, toLang, text);
-    }
-    
-    public void translate(String fromLang, String toLang, String text) throws Exception {
-        String jsonPayload = new StringBuilder()
-            .append("{")
-            .append("\"fromLang\":\"")
-            .append(fromLang)
-            .append("\",")
-            .append("\"toLang\":\"")
-            .append(toLang)
-            .append("\",")
-            .append("\"text\":\"")
-            .append(text)
-            .append("\"")
-            .append("}")
-            .toString();
-
-        URL url = new URL(ENDPOINT);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setDoOutput(true);
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("X-WM-CLIENT-ID", CLIENT_ID);
-        conn.setRequestProperty("X-WM-CLIENT-SECRET", CLIENT_SECRET);
-        conn.setRequestProperty("Content-Type", "application/json");
-
-        OutputStream os = conn.getOutputStream();
-        os.write(jsonPayload.getBytes());
-        os.flush();
-        os.close();
-
-        int statusCode = conn.getResponseCode();
-        //System.out.println("Status Code: " + statusCode);
         
-        BufferedReader br = new BufferedReader(new InputStreamReader(
-            (statusCode == 200) ? conn.getInputStream() : conn.getErrorStream()
-        ));
-        String output;
-        while ((output = br.readLine()) != null) {
-            this.translate_afterTranslate.setText(output);
+        for(String line : translate_beforeTranslate.getText().split("\\n")) {
+            String[] sentences = line.split("\\.");
+            
+            for(String sentence : sentences){
+                translate(fromLang, toLang, sentence);
+            }
+            
+            translate_afterTranslate.appendText("\n");
         }
-        conn.disconnect();
     }
     
+    /**
+     * translate feature.
+     * @param fromLang translate from this language
+     * @param toLang to this language
+     * @param text string we need to translate
+     * @throws Exception
+     */
+    public void translate(Language fromLang, Language toLang, String text) throws Exception {
+        SimpleGoogleTranslate translate = new SimpleGoogleTranslate();        
+        String result = translate.doTranslate(fromLang, toLang, text);
+
+        result = result.substring(result.lastIndexOf("\"") + 1);
+        //System.out.println(result);
+        if(!result.equals("N/A")) {
+            translate_afterTranslate.appendText(result + ". ");
+        }
+    }
+    
+    /**
+     * Swap button feature.
+     */
     public void translateSwap() {
         String temp = translate_beforeLanguage.getText();
         translate_beforeLanguage.setText(translate_afterLanguage.getText());

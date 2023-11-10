@@ -206,7 +206,10 @@
                                     <String fx:value="shadow" />
                                  </styleClass>
                                  <children>
-                                    <TextArea fx:id="translate_beforeTranslate" layoutX="32.0" layoutY="66.0" prefHeight="397.0" prefWidth="379.0" />
+                                    <TextArea fx:id="translate_beforeTranslate" layoutX="32.0" layoutY="66.0" prefHeight="397.0" prefWidth="379.0" wrapText="true">
+                                       <font>
+                                          <Font name="Tahoma" size="14.0" />
+                                       </font></TextArea>
                                     <Button fx:id="translate_swapBtn" layoutX="414.0" layoutY="16.0" mnemonicParsing="false" onAction="#translateSwap">
                                        <graphic>
                                           <FontAwesomeIconView glyphName="EXCHANGE" size="1.5em" />
@@ -222,7 +225,10 @@
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <TextArea fx:id="translate_afterTranslate" layoutX="453.0" layoutY="65.0" prefHeight="397.0" prefWidth="379.0" />
+                                    <TextArea fx:id="translate_afterTranslate" editable="false" layoutX="453.0" layoutY="65.0" prefHeight="397.0" prefWidth="379.0" wrapText="true">
+                                       <font>
+                                          <Font name="Tahoma" size="14.0" />
+                                       </font></TextArea>
                                     <Button fx:id="translate_translateBtn" layoutX="756.0" layoutY="484.0" mnemonicParsing="false" onAction="#translateTranslate" text="Translate">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
