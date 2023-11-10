@@ -21,10 +21,26 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import app.jackychu.api.simplegoogletranslate.Language;
 import app.jackychu.api.simplegoogletranslate.SimpleGoogleTranslate;
+import javafx.event.ActionEvent;
 
 public class menuController implements Initializable {
     @FXML
+    private Button contactBtn;
+
+    @FXML
+    private AnchorPane contact_form;
+
+    @FXML
     private Button exitBtn;
+
+    @FXML
+    private Button gamesBtn;
+
+    @FXML
+    private AnchorPane games_form;
+
+    @FXML
+    private Button homeBtn;
 
     @FXML
     private AnchorPane home_form;
@@ -33,10 +49,16 @@ public class menuController implements Initializable {
     private AnchorPane main_form;
 
     @FXML
+    private Button searchBtn;
+
+    @FXML
     private AnchorPane search_form;
 
     @FXML
     private Button signoutBtn;
+
+    @FXML
+    private Button translateBtn;
 
     @FXML
     private Label translate_afterLanguage;
@@ -61,6 +83,7 @@ public class menuController implements Initializable {
 
     @FXML
     private Label username;
+
     
     private double x = 0;
     private double y = 0;
@@ -139,9 +162,9 @@ public class menuController implements Initializable {
             fromLang = Language.vi;
             toLang = Language.en;
         }
-        
+              
         for(String line : translate_beforeTranslate.getText().split("\\n")) {
-            String[] sentences = line.split("\\.");
+            String[] sentences = line.split("[\\.\\!;?:\"]+");
             
             for(String sentence : sentences){
                 translate(fromLang, toLang, sentence);
@@ -182,12 +205,76 @@ public class menuController implements Initializable {
     }
     
     /**
+     * switch form whenever you click the navigation button
+     * @param event event catcher
+     */
+    public void switchForm(ActionEvent event) {
+        
+        home_form.setVisible(false);
+        search_form.setVisible(false);
+        translate_form.setVisible(false);
+        games_form.setVisible(false);
+        contact_form.setVisible(false);
+        
+        homeBtn.setStyle("-fx-background-color:transparent");
+        searchBtn.setStyle("-fx-background-color:transparent");
+        translateBtn.setStyle("-fx-background-color:transparent");
+        gamesBtn.setStyle("-fx-background-color:transparent");
+        contactBtn.setStyle("-fx-background-color:transparent");
+        
+        if (event.getSource() == homeBtn) {
+            
+            home_form.setVisible(true);
+            homeBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
+            
+        } else if (event.getSource() == searchBtn) {
+
+            search_form.setVisible(true);
+            searchBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
+
+        } else if (event.getSource() == translateBtn) {
+            
+            translate_form.setVisible(true);
+            translateBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
+
+        } else if (event.getSource() == gamesBtn) {
+            
+            games_form.setVisible(true);
+            gamesBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
+
+        } else if (event.getSource() == contactBtn) {
+            
+            contact_form.setVisible(true);
+            contactBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
+
+        }
+
+    }
+    
+    /**
+     * start navigation pane.
+     */
+    public void startNav() {
+        
+        home_form.setVisible(true);
+        search_form.setVisible(false);
+        translate_form.setVisible(false);
+        games_form.setVisible(false);
+        contact_form.setVisible(false);
+        homeBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
+            
+    }
+            
+    /**
      * initialize.
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         displayUsername();
+        startNav();
+        
     }
 }

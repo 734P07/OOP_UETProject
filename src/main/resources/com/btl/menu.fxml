@@ -65,7 +65,7 @@
                                  </font>
                               </Label>
                               <Line endX="75.0" fill="WHITE" layoutX="114.0" layoutY="191.0" startX="-92.0" stroke="WHITE" />
-                              <Button layoutX="16.0" layoutY="225.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" text="Home" textFill="WHITE">
+                              <Button fx:id="homeBtn" layoutX="16.0" layoutY="225.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" text="Home" textFill="WHITE">
                                  <graphic>
                                     <FontAwesomeIconView fill="WHITE" glyphName="HOME" size="1.5EM" />
                                  </graphic>
@@ -73,7 +73,7 @@
                                     <Font name="Tahoma" size="14.0" />
                                  </font>
                               </Button>
-                              <Button layoutX="16.0" layoutY="260.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" text="Search" textFill="WHITE">
+                              <Button fx:id="searchBtn" layoutX="16.0" layoutY="260.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" text="Search" textFill="WHITE">
                                  <graphic>
                                     <FontAwesomeIconView fill="WHITE" glyphName="SEARCH" size="1.5EM" />
                                  </graphic>
@@ -81,7 +81,7 @@
                                     <Font name="Tahoma" size="14.0" />
                                  </font>
                               </Button>
-                              <Button layoutX="16.0" layoutY="295.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" text="Translate" textFill="WHITE">
+                              <Button fx:id="translateBtn" layoutX="16.0" layoutY="295.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" text="Translate" textFill="WHITE">
                                  <graphic>
                                     <FontAwesomeIconView fill="WHITE" glyphName="EXCHANGE" size="1.5EM" />
                                  </graphic>
@@ -89,7 +89,7 @@
                                     <Font name="Tahoma" size="14.0" />
                                  </font>
                               </Button>
-                              <Button layoutX="16.0" layoutY="330.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" text="Games" textFill="WHITE">
+                              <Button fx:id="gamesBtn" layoutX="16.0" layoutY="330.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" text="Games" textFill="WHITE">
                                  <graphic>
                                     <FontAwesomeIconView fill="WHITE" glyphName="GAMEPAD" size="1.5EM" />
                                  </graphic>
@@ -97,7 +97,7 @@
                                     <Font name="Tahoma" size="14.0" />
                                  </font>
                               </Button>
-                              <Button layoutX="16.0" layoutY="365.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" text="Contact" textFill="WHITE">
+                              <Button fx:id="contactBtn" layoutX="16.0" layoutY="365.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" text="Contact" textFill="WHITE">
                                  <graphic>
                                     <FontAwesomeIconView fill="WHITE" glyphName="ADDRESS_BOOK" size="1.5EM" />
                                  </graphic>
@@ -173,7 +173,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="search_form" layoutX="44.0" layoutY="65.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="search_form" layoutX="44.0" layoutY="65.0" prefHeight="555.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="28.0" layoutY="25.0" prefHeight="506.0" prefWidth="399.0" stylesheets="@menuDesign.css">
                                  <styleClass>
@@ -198,7 +198,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="translate_form" layoutX="64.0" layoutY="30.0" prefHeight="555.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="translate_form" layoutX="64.0" layoutY="30.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="15.0" prefHeight="526.0" prefWidth="862.0" stylesheets="@menuDesign.css">
                                  <styleClass>
@@ -238,6 +238,8 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
+                        <AnchorPane fx:id="games_form" layoutX="111.0" layoutY="20.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <AnchorPane fx:id="contact_form" layoutX="77.0" layoutY="59.0" prefHeight="555.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </center>
