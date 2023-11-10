@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import app.jackychu.api.simplegoogletranslate.Language;
 import app.jackychu.api.simplegoogletranslate.SimpleGoogleTranslate;
+import java.util.logging.Level;
 import javafx.event.ActionEvent;
 
 public class menuController implements Initializable {
@@ -162,14 +163,13 @@ public class menuController implements Initializable {
             fromLang = Language.vi;
             toLang = Language.en;
         }
-              
+        
         for(String line : translate_beforeTranslate.getText().split("\\n")) {
-            String[] sentences = line.split("[\\.\\!;?:\"]+");
-            
-            for(String sentence : sentences){
-                translate(fromLang, toLang, sentence);
+            for(String sentence : line.split("\\.")) {
+                translate_afterTranslate.appendText(translate(fromLang, toLang, sentence));
+                if(!sentence.equals(""))
+                    translate_afterTranslate.appendText(". ");
             }
-            
             translate_afterTranslate.appendText("\n");
         }
     }
@@ -179,17 +179,24 @@ public class menuController implements Initializable {
      * @param fromLang translate from this language
      * @param toLang to this language
      * @param text string we need to translate
+     * @return 
      * @throws Exception
      */
-    public void translate(Language fromLang, Language toLang, String text) throws Exception {
+    public String translate(Language fromLang, Language toLang, String text) throws Exception {
+        text = text.replaceAll("\\!\\s+", "!");
+        text = text.replaceAll("\\?\\s+", "?");
+        text = text.replaceAll("\\;\\s+", ";");
+        text = text.replaceAll("\"", " ");
+        
         SimpleGoogleTranslate translate = new SimpleGoogleTranslate();        
         String result = translate.doTranslate(fromLang, toLang, text);
 
         result = result.substring(result.lastIndexOf("\"") + 1);
-        //System.out.println(result);
+        System.out.println(result);
         if(!result.equals("N/A")) {
-            translate_afterTranslate.appendText(result + ". ");
+            return result;
         }
+        return "";
     }
     
     /**
