@@ -21,8 +21,20 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import app.jackychu.api.simplegoogletranslate.Language;
 import app.jackychu.api.simplegoogletranslate.SimpleGoogleTranslate;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.logging.Level;
 import javafx.event.ActionEvent;
+import javafx.scene.control.TextField;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class menuController implements Initializable {
     @FXML
@@ -50,10 +62,43 @@ public class menuController implements Initializable {
     private AnchorPane main_form;
 
     @FXML
+    private TextArea searchAntonyms;
+
+    @FXML
     private Button searchBtn;
 
     @FXML
+    private TextArea searchDefinition;
+
+    @FXML
+    private TextArea searchExample;
+
+    @FXML
+    private Label searchPhoneticUK;
+
+    @FXML
+    private Label searchPhoneticUS;
+
+    @FXML
+    private Button searchSpeakerUK;
+
+    @FXML
+    private Button searchSpeakerUS;
+
+    @FXML
+    private TextArea searchSynonyms;
+
+    @FXML
+    private Label searchWord;
+
+    @FXML
     private AnchorPane search_form;
+
+    @FXML
+    private TextField search_searchBar;
+
+    @FXML
+    private Button search_searchBtn;
 
     @FXML
     private Button signoutBtn;
@@ -148,6 +193,85 @@ public class menuController implements Initializable {
     }
     
     /**
+     * send a GET request of dictionary api.
+     * @param word a word that we need its information.
+     * @return information of the word.
+     */
+    public WordTranscript sendGetDictionaryRequest(String word){
+        
+        ArrayList<WordTranscript> wordTranscripts = null;
+        
+        try {
+            HttpRequest getRequest = HttpRequest.newBuilder()
+                    .uri(new URI("https://api.dictionaryapi.dev/api/v2/entries/en/" + word))
+                    .build();
+
+            HttpClient httpClient = HttpClient.newHttpClient();
+            HttpResponse<String> getResponse = httpClient.send(getRequest, BodyHandlers.ofString());
+            
+            System.out.println(getResponse.body());
+            
+            Type wordsType = new TypeToken<ArrayList<WordTranscript>>(){}.getType();
+            Gson gson = new Gson();
+            
+            wordTranscripts = gson.fromJson(getResponse.body(), wordsType);
+            
+        } catch(Exception e) {}
+        
+        return wordTranscripts.get(0);
+        
+    }
+    
+    public void appendTextLn(TextArea textArea, String string) {
+        if(string != null) {
+            textArea.appendText(string + "\n");
+        }
+    }
+    
+    public void searchSearch() throws Exception {
+        
+        String word = search_searchBar.getText();
+        
+        WordTranscript wordTranscript = sendGetDictionaryRequest(word);
+        
+        searchWord.setText(wordTranscript.word.substring(0, 1).toUpperCase()
+            + wordTranscript.word.substring(1));
+        
+        for(int i = 0; i < 6; i++) {
+            
+            if(wordTranscript.phonetics.get(i).text != null) {
+                searchPhoneticUK.setText(wordTranscript.phonetics.get(i).text);
+                try {
+                    searchPhoneticUS.setText(wordTranscript.phonetics.get(i + 1).text);
+                } catch (Exception e) {
+                    searchPhoneticUS.setText(wordTranscript.phonetics.get(i).text);
+                }
+                break;
+            }
+        }
+        
+        searchDefinition.clear();
+        searchExample.clear();
+        searchSynonyms.clear();
+        searchAntonyms.clear();
+        
+        for (WordTranscript.meaning meaning : wordTranscript.meanings) {
+            appendTextLn(searchDefinition, meaning.partOfSpeech);
+            for (WordTranscript.definition definition : meaning.definitions) {
+                appendTextLn(searchDefinition, translate(Language.en, Language.vi,definition.definition));
+                appendTextLn(searchExample, definition.example);
+            }
+            for(String synonym : meaning.synonyms) {
+                appendTextLn(searchSynonyms, synonym);
+            }
+            for(String antonym : meaning.antonyms) {
+                appendTextLn(searchAntonyms, antonym);
+            }
+        }
+        
+    }
+    
+    /**
      * translate button.
      * @throws java.lang.Exception
      */
@@ -192,7 +316,7 @@ public class menuController implements Initializable {
         String result = translate.doTranslate(fromLang, toLang, text);
 
         result = result.substring(result.lastIndexOf("\"") + 1);
-        System.out.println(result);
+        //System.out.println(result);
         if(!result.equals("N/A")) {
             return result;
         }
