@@ -1,5 +1,7 @@
 package com.btl;
 
+import com.btl.SpeedWord.Engine;
+
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -126,6 +128,9 @@ public class menuController implements Initializable {
 
     @FXML
     private Button translate_translateBtn;
+
+    @FXML
+    private Button open_speedwordBtn;
 
     @FXML
     private Label username;
@@ -407,5 +412,13 @@ public class menuController implements Initializable {
         displayUsername();
         startNav();
         
+    }
+
+    /**
+     * Mở game Speed Word.
+     */
+    public void startSpeedWord() {
+        Engine.getEngine().start();
+        System.out.println("SpeedWord start!");
     }
 }
