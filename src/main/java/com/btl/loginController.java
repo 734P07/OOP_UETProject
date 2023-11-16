@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -25,10 +26,37 @@ import javafx.stage.StageStyle;
 public class loginController implements Initializable{
 
     @FXML
+    private Label CreationMessageLabel;
+
+    @FXML
     private Button close;
-    
+
+    @FXML
+    private Button closeButton;
+
+    @FXML
+    private Label confirmPasswordLabel;
+
+    @FXML
+    private PasswordField confirm_password;
+
     @FXML
     private Button createAccountBtn;
+
+    @FXML
+    private Button createButton;
+
+    @FXML
+    private TextField create_email;
+
+    @FXML
+    private AnchorPane create_form;
+
+    @FXML
+    private PasswordField create_password;
+
+    @FXML
+    private TextField create_username;
 
     @FXML
     private Button forgotPassBtn;
@@ -37,13 +65,22 @@ public class loginController implements Initializable{
     private Button loginBtn;
 
     @FXML
-    private AnchorPane login_form;
+    private AnchorPane loginRight_form;
+    
+    @FXML 
+    private AnchorPane forgotPassword_form;
 
     @FXML
     private PasswordField password;
 
     @FXML
     private TextField username;
+    
+    @FXML
+    private Button forgotPassword_close;
+
+    @FXML
+    private Button forgotPassword_confirm;
     
     //Database tools
     private Connection connect;
@@ -110,6 +147,51 @@ public class loginController implements Initializable{
         }catch(Exception e){e.printStackTrace();}
     }
     
+    public void creatButtonAction(ActionEvent event) {
+        if (create_username.getText().isEmpty() || create_password.getText().isEmpty() || confirm_password.getText().isEmpty() || create_email.getText().isEmpty()) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please filled in all blanks!");
+            alert.showAndWait();
+            CreationMessageLabel.setVisible(true);
+            CreationMessageLabel.setText("Failed to create account");
+        } else {
+            if (create_password.getText().equals(confirm_password.getText())) {
+                confirmPasswordLabel.setText("Valid Password");
+                CreationMessageLabel.setVisible(true);
+                CreationMessageLabel.setText("Succeed create account");
+            } else {
+                confirmPasswordLabel.setText("Password does not match");
+                CreationMessageLabel.setVisible(true);
+                CreationMessageLabel.setText("Failed to create account");
+            }
+            confirmPasswordLabel.setVisible(true);
+        }
+    }
+    
+    public void loginCreateAccount() {
+        loginRight_form.setVisible(false);
+        create_form.setVisible(true);
+        forgotPassword_form.setVisible(false);
+    }
+    
+    public void forgotPasswordAccount() {
+        loginRight_form.setVisible(false);
+        create_form.setVisible(false);
+        forgotPassword_form.setVisible(true);
+    }
+    
+    public void createClose() {
+        loginRight_form.setVisible(true);
+        create_form.setVisible(false);
+    }
+    
+    public void forgotPasswordClose() {
+        loginRight_form.setVisible(true);
+        forgotPassword_form.setVisible(false);
+    }
+    
     /**
      *  close program.
      */
@@ -124,6 +206,9 @@ public class loginController implements Initializable{
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // nothing to do here.
+        loginRight_form.setVisible(true);
+        create_form.setVisible(false);
+        confirmPasswordLabel.setVisible(false);
+        CreationMessageLabel.setVisible(false);
     }
 }
