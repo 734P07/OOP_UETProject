@@ -21,6 +21,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.scene.web.WebView;
+import javafx.concurrent.Task;
 import app.jackychu.api.simplegoogletranslate.Language;
 import app.jackychu.api.simplegoogletranslate.SimpleGoogleTranslate;
 import java.io.IOException;
@@ -36,8 +38,10 @@ import javafx.scene.control.TextField;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
-import javafx.scene.web.WebView;
 
 public class menuController implements Initializable {
     @FXML
@@ -145,6 +149,10 @@ public class menuController implements Initializable {
     @FXML
     private Label username;
     
+    private Connection connect;
+    private PreparedStatement prepare;
+    private ResultSet result;
+    
     private double x = 0;
     private double y = 0;
     
@@ -206,6 +214,63 @@ public class menuController implements Initializable {
         username.setText(getAccountData.username);
     }
     
+    public void homeDisplayDayStreak() {
+        Task<String> task = new Task<>() {
+            protected String call() throws Exception {
+                String sql = "SELECT DATEDIFF(CURDATE(), lastDay), dayStreak FROM day_streak WHERE username = ?";
+
+                connect = Database.connectDb();
+
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, getAccountData.username);
+
+                result = prepare.executeQuery();
+
+                if(result.next()) {
+                    int dayDiff = result.getInt(1);
+                    int dayStreak = result.getInt(2);
+                    
+                    if(dayDiff == 1) {
+                        prepare = connect.prepareStatement("UPDATE day_streak SET lastDay = CURDATE(), "
+                            + "dayStreak = dayStreak + 1 WHERE username = ?");
+                        prepare.setString(1, getAccountData.username);
+                        prepare.executeUpdate();
+                        dayStreak++;
+                    } else if(dayDiff != 0) {
+                        prepare = connect.prepareStatement("UPDATE day_streak SET lastDay = CURDATE(), "
+                            + "dayStreak = 1 WHERE username = ?");
+                        prepare.setString(1, getAccountData.username);
+                        prepare.executeUpdate();
+                        dayStreak = 1;
+                    }
+                    
+                    return Integer.toString(dayStreak);
+                }
+                
+                prepare = connect.prepareStatement("INSERT INTO `day_streak`(`lastDay`, `dayStreak`, `username`)"
+                        + " VALUES (CURDATE(),1,?)");
+                prepare.setString(1, getAccountData.username);
+                prepare.executeUpdate();
+                
+                return "1";
+            }
+        };    
+                
+        task.setOnSucceeded(e -> {
+            homeDayStreak.setText(task.getValue());
+        });
+        
+        task.setOnFailed(e -> {
+             System.out.println("Day Streak Failed");
+        });
+        
+        new Thread(task).start();
+    }
+    
+    public void homeDisplaySearchedWords() {
+        
+    }
+    
     public void homeDisplayDailyWord() {
         String dailyWord = RandomWordGetAPI.getSentRequest().getARandomWord();
         homeDailyWord.setText(dailyWord.substring(0, 1).toUpperCase()
@@ -244,6 +309,8 @@ public class menuController implements Initializable {
     
     public void searchSearch() throws Exception {
         
+        searchSpeakerUK.setVisible(true);
+        searchSpeakerUS.setVisible(true);
         String word = search_searchBar.getText();
         
         WordTranscript wordTranscript = sendGetDictionaryRequest(word);
@@ -286,7 +353,8 @@ public class menuController implements Initializable {
             for (WordTranscript.definition definition : meaning.definitions) {
                 //appendTextLn(searchDefinition, translate(Language.en, Language.vi,definition.definition));
                 sb1.append("<p>" + definition.definition + "</p>");
-                sb2.append("<p>" + definition.example + "</p>");
+                if(definition.example != null)
+                    sb2.append("<p>" + definition.example + "</p>");
             }
             for(String synonym : meaning.synonyms) {
                 //appendTextLn(searchSynonyms, synonym);
@@ -307,6 +375,15 @@ public class menuController implements Initializable {
         searchExample.getEngine().loadContent(sb2.toString());
         searchSynonyms.getEngine().loadContent(sb3.toString());
         searchAntonyms.getEngine().loadContent(sb4.toString());
+        
+        searchDefinition.getEngine().
+                setUserStyleSheetLocation(getClass().getResource("searchDesign.css").toString());
+        searchExample.getEngine().
+                setUserStyleSheetLocation(getClass().getResource("searchDesign.css").toString());
+        searchSynonyms.getEngine().
+                setUserStyleSheetLocation(getClass().getResource("searchDesign.css").toString());
+        searchAntonyms.getEngine().
+                setUserStyleSheetLocation(getClass().getResource("searchDesign.css").toString());
     }
     
     /**
@@ -446,7 +523,10 @@ public class menuController implements Initializable {
         startNav();
         
         homeDisplayDailyWord();
+        homeDisplayDayStreak();
         
+        searchSpeakerUK.setVisible(false);
+        searchSpeakerUS.setVisible(false);
     }
 
     /**
