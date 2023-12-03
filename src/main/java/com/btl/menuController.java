@@ -1,6 +1,6 @@
 package com.btl;
 
-import com.btl.SpeedWord.Engine;
+import com.btl.SpeedWord.Core.Engine;
 
 import java.net.URL;
 import java.util.Optional;
