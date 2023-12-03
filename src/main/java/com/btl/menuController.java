@@ -37,6 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import javafx.scene.web.WebView;
 
 public class menuController implements Initializable {
     @FXML
@@ -58,22 +59,34 @@ public class menuController implements Initializable {
     private Button homeBtn;
 
     @FXML
+    private Label homeDailyWord;
+
+    @FXML
+    private Label homeDayStreak;
+
+    @FXML
+    private Label homeSearchedWords;
+
+    @FXML
     private AnchorPane home_form;
 
     @FXML
     private AnchorPane main_form;
 
     @FXML
-    private TextArea searchAntonyms;
+    private Button open_speedwordBtn;
+
+    @FXML
+    private WebView searchAntonyms;
 
     @FXML
     private Button searchBtn;
 
     @FXML
-    private TextArea searchDefinition;
+    private WebView searchDefinition;
 
     @FXML
-    private TextArea searchExample;
+    private WebView searchExample;
 
     @FXML
     private Label searchPhoneticUK;
@@ -88,7 +101,7 @@ public class menuController implements Initializable {
     private Button searchSpeakerUS;
 
     @FXML
-    private TextArea searchSynonyms;
+    private WebView searchSynonyms;
 
     @FXML
     private Label searchWord;
@@ -130,11 +143,7 @@ public class menuController implements Initializable {
     private Button translate_translateBtn;
 
     @FXML
-    private Button open_speedwordBtn;
-
-    @FXML
     private Label username;
-
     
     private double x = 0;
     private double y = 0;
@@ -197,6 +206,12 @@ public class menuController implements Initializable {
         username.setText(getAccountData.username);
     }
     
+    public void homeDisplayDailyWord() {
+        String dailyWord = RandomWordGetAPI.getSentRequest().getARandomWord();
+        homeDailyWord.setText(dailyWord.substring(0, 1).toUpperCase()
+            + dailyWord.substring(1));
+    }
+    
     /**
      * send a GET request of dictionary api.
      * @param word a word that we need its information.
@@ -227,12 +242,6 @@ public class menuController implements Initializable {
         
     }
     
-    public void appendTextLn(TextArea textArea, String string) {
-        if(string != null) {
-            textArea.appendText(string + "\n");
-        }
-    }
-    
     public void searchSearch() throws Exception {
         
         String word = search_searchBar.getText();
@@ -255,25 +264,49 @@ public class menuController implements Initializable {
             }
         }
         
-        searchDefinition.clear();
-        searchExample.clear();
-        searchSynonyms.clear();
-        searchAntonyms.clear();
+        StringBuilder sb1 = new StringBuilder()
+                .append("<html>")
+                .append("<body>")
+                .append("<h1>Definitions</h1>");
+        StringBuilder sb2 = new StringBuilder()
+                .append("<html>")
+                .append("<body>")
+                .append("<h1>Examples</h1>");
+        StringBuilder sb3 = new StringBuilder()
+                .append("<html>")
+                .append("<body>")
+                .append("<h1>Synonyms</h1>");
+        StringBuilder sb4 = new StringBuilder()
+                .append("<html>")
+                .append("<body>")
+                .append("<h1>Antonyms</h1>");
         
         for (WordTranscript.meaning meaning : wordTranscript.meanings) {
-            appendTextLn(searchDefinition, meaning.partOfSpeech);
+            sb1.append("<h2>" + meaning.partOfSpeech + "</h2>");
             for (WordTranscript.definition definition : meaning.definitions) {
-                appendTextLn(searchDefinition, translate(Language.en, Language.vi,definition.definition));
-                appendTextLn(searchExample, definition.example);
+                //appendTextLn(searchDefinition, translate(Language.en, Language.vi,definition.definition));
+                sb1.append("<p>" + definition.definition + "</p>");
+                sb2.append("<p>" + definition.example + "</p>");
             }
             for(String synonym : meaning.synonyms) {
-                appendTextLn(searchSynonyms, synonym);
+                //appendTextLn(searchSynonyms, synonym);
+                sb3.append("<p>" + synonym + "</p>");
             }
             for(String antonym : meaning.antonyms) {
-                appendTextLn(searchAntonyms, antonym);
+                //appendTextLn(searchAntonyms, antonym);
+                sb4.append("<p>" + antonym + "</p>");
             }
         }
         
+        sb1.append("</body></html>");
+        sb2.append("</body></html>");
+        sb3.append("</body></html>");
+        sb4.append("</body></html>");
+        
+        searchDefinition.getEngine().loadContent(sb1.toString());
+        searchExample.getEngine().loadContent(sb2.toString());
+        searchSynonyms.getEngine().loadContent(sb3.toString());
+        searchAntonyms.getEngine().loadContent(sb4.toString());
     }
     
     /**
@@ -411,6 +444,8 @@ public class menuController implements Initializable {
         
         displayUsername();
         startNav();
+        
+        homeDisplayDailyWord();
         
     }
 
