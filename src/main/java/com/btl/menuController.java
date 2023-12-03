@@ -268,7 +268,32 @@ public class menuController implements Initializable {
     }
     
     public void homeDisplaySearchedWords() {
+        Task<String> task = new Task<>() {
+            protected String call() throws Exception {
+                connect = Database.connectDb();
+
+                prepare = connect.prepareStatement("SELECT COUNT(word) FROM searched_words WHERE username = ?");
+                prepare.setString(1, getAccountData.username);
+
+                result = prepare.executeQuery();
+
+                if(result.next()) {
+                    return Integer.toString(result.getInt(1));
+                }
+                
+                return "0";
+            }
+        };    
+                
+        task.setOnSucceeded(e -> {
+            homeSearchedWords.setText(task.getValue());
+        });
         
+        task.setOnFailed(e -> {
+             System.out.println("Get Search Words Failed");
+        });
+        
+        new Thread(task).start();
     }
     
     public void homeDisplayDailyWord() {
@@ -384,6 +409,29 @@ public class menuController implements Initializable {
                 setUserStyleSheetLocation(getClass().getResource("searchDesign.css").toString());
         searchAntonyms.getEngine().
                 setUserStyleSheetLocation(getClass().getResource("searchDesign.css").toString());
+        
+        Task<Boolean> task = new Task<>() {
+            protected Boolean call() throws Exception {
+                connect = Database.connectDb();
+
+                prepare = connect.prepareStatement("SELECT word FROM searched_words WHERE username = ? AND word = ?");
+                prepare.setString(1, getAccountData.username);
+                prepare.setString(2, word);
+
+                result = prepare.executeQuery();
+
+                if(!result.next()) {
+                    prepare = connect.prepareStatement("INSERT INTO `searched_words`(`word`, `username`, `day`) "
+                            + "VALUES (?,?,CURDATE())");
+                    prepare.setString(1, word);
+                    prepare.setString(2, getAccountData.username);
+                    prepare.executeUpdate();
+                }
+                return true;
+            }
+        };
+        
+        new Thread(task).start();
     }
     
     /**
@@ -470,6 +518,7 @@ public class menuController implements Initializable {
         
         if (event.getSource() == homeBtn) {
             
+            homeDisplaySearchedWords();
             home_form.setVisible(true);
             homeBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
             
@@ -524,6 +573,7 @@ public class menuController implements Initializable {
         
         homeDisplayDailyWord();
         homeDisplayDayStreak();
+        homeDisplaySearchedWords();
         
         searchSpeakerUK.setVisible(false);
         searchSpeakerUS.setVisible(false);
