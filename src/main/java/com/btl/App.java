@@ -24,7 +24,9 @@ public class App extends Application {
      */
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("loginScene.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("loginScene.fxml"));
+        Parent root = loader.load();
+        loginController controller = loader.getController();
                 
         Scene scene = new Scene(root);
         
@@ -45,9 +47,8 @@ public class App extends Application {
         });
         
         stage.initStyle(StageStyle.TRANSPARENT);
-        
         stage.setScene(scene);
-        stage.show();
+        controller.getWelcomeStage().setOnHidden(e -> stage.show());
     }
 
     /**

@@ -32,9 +32,15 @@ import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import javax.mail.MessagingException;
+import javafx.scene.web.WebView;
+import javafx.scene.web.WebEngine;
+import javafx.util.Duration;
+import javafx.animation.PauseTransition;
+import javafx.scene.layout.StackPane;
 
 
 public class loginController implements Initializable{
+    private Stage welcomeStage;
 
     @FXML
     private Button close;
@@ -129,6 +135,12 @@ public class loginController implements Initializable{
     @FXML 
     private Button backToCreateAccount;
     
+    @FXML
+    private AnchorPane tempPane;
+
+    @FXML
+    private WebView webView;
+    
     //Database tools
     private Connection connect;
     private PreparedStatement prepare;
@@ -139,6 +151,10 @@ public class loginController implements Initializable{
     
     private double x = 0;
     private double y = 0;
+    
+    public Stage getWelcomeStage() {
+        return welcomeStage;
+    }
     
     /**
      * control login feature.
@@ -563,6 +579,12 @@ public class loginController implements Initializable{
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        showWelcomeScreen();
+        
+        PauseTransition delay = new PauseTransition(Duration.seconds(5));
+        delay.setOnFinished(event -> welcomeStage.close());
+        delay.play();
+        
         loginRight_form.setVisible(true);
         create_form.setVisible(false);
         confirmPasswordLabel.setVisible(false);
@@ -577,5 +599,216 @@ public class loginController implements Initializable{
                 confirmPasswordLabel.setStyle("-fx-text-fill: red;");
             }
         });
+    }
+    
+    private void showWelcomeScreen() {
+        welcomeStage = new Stage();
+        WebView web_view = new WebView();
+        WebEngine webEngine = web_view.getEngine();
+
+        String css = "/*\n" +
+                "\n" +
+                "Tutorial:\n" +
+                "https://www.roboleary.net/animation/2022/10/31/how-to-make-a-slick-animation-schitts-creek-title-sequence.html\n" +
+                "\n" +
+                "Part of Title Sequences collection:\n" +
+                "https://codepen.io/collection/nNmwgP\n" +
+                "\n" +
+                "Source code:\n" +
+                "https://github.com/robole/title-sequences\n" +
+                "\n" +
+                "*/\n" +
+                "\n" +
+                "@import url(\"https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600\");\n" +
+                "\n" +
+                ":root {\n" +
+                "  --bar-scale-y: 0;\n" +
+                "  --sparkle-color: rgb(253 244 215 / 40%);\n" +
+                "}\n" +
+                "\n" +
+                "@keyframes pop-word {\n" +
+                "  to {\n" +
+                "    transform: rotateX(0);\n" +
+                "  }\n" +
+                "}\n" +
+                "\n" +
+                "@keyframes show {\n" +
+                "  to {\n" +
+                "    opacity: 1;\n" +
+                "  }\n" +
+                "}\n" +
+                "\n" +
+                "@keyframes bar-scale {\n" +
+                "  to {\n" +
+                "    transform: scaleY(1);\n" +
+                "  }\n" +
+                "}\n" +
+                "\n" +
+                "@keyframes sparkle {\n" +
+                "  0% {\n" +
+                "    transform: scale(0);\n" +
+                "  }\n" +
+                "\n" +
+                "  60% {\n" +
+                "    transform: scale(1) translate(4px, 1px) rotate(8deg);\n" +
+                "  }\n" +
+                "\n" +
+                "  100% {\n" +
+                "    transform: scale(0) translate(4px, 1px) rotate(8deg);\n" +
+                "  }\n" +
+                "}\n" +
+                "\n" +
+                "@keyframes shimmer {\n" +
+                "  to {\n" +
+                "    text-shadow: 0 0 8px red;\n" +
+                "  }\n" +
+                "}\n" +
+                "\n" +
+                "body {\n" +
+                "  display: grid;\n" +
+                "  height: 100vh;\n" +
+                "\n" +
+                "  background-color: black;\n" +
+                "  place-items: center;\n" +
+                "}\n" +
+                "\n" +
+                "h1 {\n" +
+                "  color: white;\n" +
+                "  font-family: \"Playfair Display\", Vidaloka, serif;\n" +
+                "  font-size: 8rem;\n" +
+                "\n" +
+                "  line-height: 0.85;\n" +
+                "  perspective: 500px;\n" +
+                "}\n" +
+                "\n" +
+                ".word {\n" +
+                "  display: block;\n" +
+                "\n" +
+                "  animation: show 0.01s forwards, pop-word 1.5s forwards;\n" +
+                "  animation-timing-function: cubic-bezier(0.14, 1.23, 0.33, 1.16);\n" +
+                "  opacity: 0;\n" +
+                "\n" +
+                "  transform: rotateX(120deg);\n" +
+                "  transform-origin: 50% 100%;\n" +
+                "}\n" +
+                "\n" +
+                ".word:nth-of-type(2) {\n" +
+                "  padding: 0 2rem;\n" +
+                "\n" +
+                "  animation-delay: 1.5s;\n" +
+                "\n" +
+                "  color: gold;\n" +
+                "}\n" +
+                "\n" +
+                ".superscript {\n" +
+                "  position: relative;\n" +
+                "  animation-delay: 3.6s;\n" +
+                "\n" +
+                "  animation-duration: 0.25s;\n" +
+                "  animation-name: shimmer;\n" +
+                "\n" +
+                "  vertical-align: text-top;\n" +
+                "}\n" +
+                "\n" +
+                "/* bars */\n" +
+                ".superscript::before {\n" +
+                "  --bar-width: 25%;\n" +
+                "\n" +
+                "  position: absolute;\n" +
+                "\n" +
+                "  top: 37%;\n" +
+                "  left: 47%;\n" +
+                "  width: 14%;\n" +
+                "  height: 48%;\n" +
+                "\n" +
+                "  animation: bar-scale 0.25s linear 3s 1 forwards;\n" +
+                "\n" +
+                "  background: linear-gradient(\n" +
+                "    to right,\n" +
+                "    white var(--bar-width),\n" +
+                "    transparent var(--bar-width) calc(100% - var(--bar-width)),\n" +
+                "    white calc(100% - var(--bar-width))\n" +
+                "  );\n" +
+                "\n" +
+                "  content: \"\";\n" +
+                "\n" +
+                "  transform: scaleY(var(--bar-scale-y));\n" +
+                "}\n" +
+                "\n" +
+                "/* sparkle */\n" +
+                ".superscript::after {\n" +
+                "  --size: 10rem;\n" +
+                "\n" +
+                "  position: absolute;\n" +
+                "\n" +
+                "  top: -5%;\n" +
+                "  left: -85%;\n" +
+                "\n" +
+                "  width: var(--size);\n" +
+                "  height: var(--size);\n" +
+                "\n" +
+                "  animation: sparkle 0.4s linear 3.5s 1 forwards;\n" +
+                "\n" +
+                "  background: radial-gradient(\n" +
+                "      circle at center,\n" +
+                "      rgb(252 249 241 / 94%) 0% 7%,\n" +
+                "      transparent 7% 100%\n" +
+                "    ),\n" +
+                "    conic-gradient(\n" +
+                "      transparent 0deg 18deg,\n" +
+                "      var(--sparkle-color) 18deg,\n" +
+                "      transparent 20deg 40deg,\n" +
+                "      var(--sparkle-color) 40deg,\n" +
+                "      transparent 43deg 87deg,\n" +
+                "      var(--sparkle-color) 87deg,\n" +
+                "      transparent 95deg 175deg,\n" +
+                "      var(--sparkle-color) 175deg,\n" +
+                "      transparent 178deg 220deg,\n" +
+                "      var(--sparkle-color) 220deg,\n" +
+                "      transparent 222deg 270deg,\n" +
+                "      var(--sparkle-color) 270deg,\n" +
+                "      transparent 275deg 300deg,\n" +
+                "      var(--sparkle-color) 300deg,\n" +
+                "      transparent 303deg 360deg\n" +
+                "    );\n" +
+                "\n" +
+                "  border-radius: 50%;\n" +
+                "  clip-path: polygon(\n" +
+                "    50% 0,\n" +
+                "    59.13% 26.64%,\n" +
+                "    85.13% -2.35%,\n" +
+                "    100% 50%,\n" +
+                "    50% 100%,\n" +
+                "    0 50%,\n" +
+                "    31.39% 34.86%\n" +
+                "  );\n" +
+                "\n" +
+                "  content: \"\";\n" +
+                "\n" +
+                "  filter: blur(1px);\n" +
+                "\n" +
+                "  transform: scale(0);\n" +
+                "}\n" +
+                "\n" +
+                "@media screen and (max-width: 600px) {\n" +
+                "  h1 {\n" +
+                "    font-size: 5rem;\n" +
+                "  }\n" +
+                "\n" +
+                "  /* sparkle */\n" +
+                "  .superscript::after {\n" +
+                "    --size: 6rem;\n" +
+                "  }\n" +
+                "}";
+
+        String html = "<html><head><style>" + css + "</style></head>"
+            + "<body><h1><span class=\"word\">Dice<span class=\"superscript\">s</span> </span>"
+            + "<span class=\"word\">Dictionary</span></h1></body></html>";
+
+        webEngine.loadContent(html);
+
+        Scene scene = new Scene(new Group(web_view), 800, 600);
+        welcomeStage.setScene(scene);
+        welcomeStage.show();
     }
 }
