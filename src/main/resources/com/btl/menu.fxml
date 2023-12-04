@@ -123,7 +123,7 @@
                <center>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="home_form" layoutX="44.0" layoutY="61.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="home_form" layoutX="44.0" layoutY="61.0" prefHeight="555.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="15.0" prefHeight="526.0" prefWidth="862.0" stylesheets="@menuDesign.css">
                                  <children>
@@ -202,9 +202,12 @@
                                     </LineChart>
                                     <TableView fx:id="homeRankingTable" layoutX="514.0" layoutY="175.0" prefHeight="329.0" prefWidth="335.0">
                                       <columns>
-                                        <TableColumn prefWidth="75.0" text="C1" />
-                                        <TableColumn prefWidth="75.0" text="C2" />
+                                        <TableColumn fx:id="homeUsernameColumn" prefWidth="177.0" text="Username" />
+                                        <TableColumn fx:id="homeScoreColumn" prefWidth="157.0" text="Game Score" />
                                       </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
                                     </TableView>
                                  </children>
                                  <styleClass>
@@ -214,7 +217,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="search_form" layoutX="44.0" layoutY="65.0" prefHeight="555.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="search_form" layoutX="44.0" layoutY="65.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="28.0" layoutY="25.0" prefHeight="506.0" prefWidth="399.0" stylesheets="@menuDesign.css">
                                  <styleClass>

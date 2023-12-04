@@ -49,6 +49,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.media.Media; 
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class menuController implements Initializable {
     @FXML
@@ -79,10 +81,16 @@ public class menuController implements Initializable {
     private LineChart<?, ?> homeProgressChart;
 
     @FXML
-    private TableView<?> homeRankingTable;
+    private TableView<HomeRankingRow> homeRankingTable;
+
+    @FXML
+    private TableColumn<HomeRankingRow, Integer> homeScoreColumn;
 
     @FXML
     private Label homeSearchedWords;
+
+    @FXML
+    private TableColumn<HomeRankingRow, String> homeUsernameColumn;
 
     @FXML
     private AnchorPane home_form;
@@ -313,9 +321,23 @@ public class menuController implements Initializable {
     }
     
     public void homeDisplayDailyWord() {
-        String dailyWord = RandomWordGetAPI.getSentRequest().getARandomWord();
-        homeDailyWord.setText(dailyWord.substring(0, 1).toUpperCase()
-            + dailyWord.substring(1));
+        Task<String> task = new Task<>() {
+            protected String call() throws Exception {
+                return RandomWordGetAPI.getSentRequest().getARandomWord();
+            }
+        };
+        
+        task.setOnSucceeded(e -> {
+            String dailyWord = task.getValue();
+            homeDailyWord.setText(dailyWord.substring(0, 1).toUpperCase()
+                    + dailyWord.substring(1));
+        });
+        
+        task.setOnFailed(e -> {
+             System.out.println("Display daily word Failed");
+        });
+        
+        new Thread(task).start();
     }
     
     public void homeProgressChart() {
@@ -351,7 +373,28 @@ public class menuController implements Initializable {
     }
     
     public void homeRankingTable() {
+        Task<Boolean> task = new Task<>() {
+            protected Boolean call() throws Exception {
+                connect = Database.connectDb();
+
+                prepare = connect.prepareStatement("SELECT username, MAX(highScore) FROM game_points "
+                        + "GROUP BY username ORDER BY MAX(highScore) DESC");
+
+                result = prepare.executeQuery();
+                homeRankingTable.getItems().clear();
+                while (result.next()) {
+                    homeRankingTable.getItems().add(new HomeRankingRow(result.getString(1), result.getInt(2)));
+                }
+                
+                return false;
+            }
+        };
         
+        task.setOnFailed(e -> {
+             System.out.println("Ranking table Failed");
+        });
+        
+        new Thread(task).start();
     }
     
     /**
@@ -611,6 +654,7 @@ public class menuController implements Initializable {
             
             homeDisplaySearchedWords();
             homeProgressChart();
+            homeRankingTable();
             home_form.setVisible(true);
             homeBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
             
@@ -663,10 +707,14 @@ public class menuController implements Initializable {
         displayUsername();
         startNav();
         
+        homeUsernameColumn.setCellValueFactory(new PropertyValueFactory<HomeRankingRow, String>("username"));
+        homeScoreColumn.setCellValueFactory(new PropertyValueFactory<HomeRankingRow, Integer>("gameScore"));
+        
         homeDisplayDailyWord();
         homeDisplayDayStreak();
         homeDisplaySearchedWords();
         homeProgressChart();
+        homeRankingTable();
         
         searchSpeakerUK.setVisible(false);
         searchSpeakerUS.setVisible(false);
