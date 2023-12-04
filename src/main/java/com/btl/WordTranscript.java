@@ -11,6 +11,7 @@ public class WordTranscript {
     
     public class phonetic {
         public String text = "";
+        public String audio = "";
     }
     
     public class meaning {

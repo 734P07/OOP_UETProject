@@ -47,6 +47,8 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.media.Media; 
+import javafx.scene.media.MediaPlayer;
 
 public class menuController implements Initializable {
     @FXML
@@ -159,6 +161,9 @@ public class menuController implements Initializable {
 
     @FXML
     private Label username;
+    
+    private String UKSpeakerURL;
+    private String USSpeakerURL;
     
     private Connection connect;
     private PreparedStatement prepare;
@@ -397,23 +402,29 @@ public class menuController implements Initializable {
             return;
         }
         
-        try {
-            for(int i = 0; i < 6; i++) {
-                if(wordTranscript.phonetics.get(i).text != null) {
-                    searchPhoneticUK.setText(wordTranscript.phonetics.get(i).text);
-                    try {
-                        searchPhoneticUS.setText(wordTranscript.phonetics.get(i + 1).text);
-                    } catch (Exception e) {
-                        searchPhoneticUS.setText(wordTranscript.phonetics.get(i).text);
-                    }
-                    break;
-                }
+        ArrayList<String> speakerPaths = new ArrayList<String>(); 
+        ArrayList<String> phonetics = new ArrayList<String>();
+        
+        for(int i = 0; i < wordTranscript.phonetics.size(); i++) {
+            if(wordTranscript.phonetics.get(i).text != null) {
+                phonetics.add(wordTranscript.phonetics.get(i).text);
             }
-        } catch (Exception e) {
+            if(wordTranscript.phonetics.get(i).audio.length() > 2) {
+                speakerPaths.add(wordTranscript.phonetics.get(i).audio);
+            }
+        }
+        
+        if (speakerPaths.isEmpty() || phonetics.isEmpty()) {
             alert.setContentText("This word has not been updated. Try another word.");
             alert.showAndWait();
             return;
         }
+        
+        searchPhoneticUK.setText(phonetics.get(0));
+        searchPhoneticUS.setText(phonetics.get(phonetics.size() - 1));
+        
+        UKSpeakerURL = speakerPaths.get(0);
+        USSpeakerURL = speakerPaths.get(speakerPaths.size() - 1);
         
         searchWord.setText(wordTranscript.word.substring(0, 1).toUpperCase()
             + wordTranscript.word.substring(1));
@@ -500,6 +511,18 @@ public class menuController implements Initializable {
         };
         
         new Thread(task).start();
+    }
+    
+    public void searchSpeaker(ActionEvent event) {
+        Media sound;
+        
+        if (event.getSource() == searchSpeakerUK) {
+            sound = new Media(UKSpeakerURL);
+        } else {
+            sound = new Media(USSpeakerURL);
+        }
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.play();
     }
     
     /**
