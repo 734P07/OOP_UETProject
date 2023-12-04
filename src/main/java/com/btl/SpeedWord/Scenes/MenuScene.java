@@ -26,10 +26,19 @@ public class MenuScene extends CustomScene {
     private static MenuScene s_Instance;
     private Scene scene;
     private boolean pause;
+    private Slider musicSlider;
+    private Slider SFXSlider;
 
     private MenuScene() {
-        Option();
-        Score();
+        musicSlider = new Slider();
+        musicSlider.setMin(0);
+        musicSlider.setMax(1);
+        musicSlider.setValue(0.5);
+
+        SFXSlider = new Slider();
+        SFXSlider.setMin(0);
+        SFXSlider.setMax(1);
+        SFXSlider.setValue(0.5);
     }
 
     public void Init() {
@@ -43,6 +52,8 @@ public class MenuScene extends CustomScene {
 
         scene = new Scene(root, Engine.SCREEN_WIDTH, Engine.SCREEN_HEIGHT);
         scene.getStylesheets().add(getClass().getResource("transparentButton.css").toExternalForm());
+        Option();
+        Score();
 
         SoundManager.getInstance().playSound("menu");
     }
@@ -74,21 +85,13 @@ public class MenuScene extends CustomScene {
         return s_Instance;
     }
 
-    private void Option() {
-        Slider musicSlider = new Slider();
-        musicSlider.setMin(0);
-        musicSlider.setMax(1);
-        musicSlider.setValue(0.5);
+    public void Option() {
         SoundManager.getInstance().getSound("menu").volumeProperty().bind(musicSlider.valueProperty());
         SoundManager.getInstance().getSound("play").volumeProperty().bind(musicSlider.valueProperty());
         musicSlider.setTranslateX(20);
         musicSlider.setTranslateY(-15);
         musicSlider.setMaxSize(300, 50);
 
-        Slider SFXSlider = new Slider();
-        SFXSlider.setMin(0);
-        SFXSlider.setMax(1);
-        SFXSlider.setValue(0.5);
         SoundManager.getInstance().getSound("click").volumeProperty().bind(SFXSlider.valueProperty());
         SFXSlider.setTranslateX(20);
         SFXSlider.setTranslateY(90);
