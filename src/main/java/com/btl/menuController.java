@@ -155,6 +155,15 @@ public class menuController implements Initializable {
     
     private double x = 0;
     private double y = 0;
+
+    private static menuController instance;
+
+    public static menuController getInstance() {
+        if (instance == null) {
+            instance = new menuController();
+        }
+        return instance;
+    }
     
     /**
      *  close program.
@@ -584,6 +593,11 @@ public class menuController implements Initializable {
      */
     public void startSpeedWord() {
         Engine.getEngine().start();
+        open_speedwordBtn.setDisable(true);
         System.out.println("SpeedWord start!");
+    }
+
+    public void turnOnSpeedWordBtn() {
+        open_speedwordBtn.setDisable(false);
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.btl.SpeedWord.Scenes;
 
+import com.btl.SpeedWord.Logic.Point;
 import com.btl.SpeedWord.Sound.SoundManager;
 import com.btl.SpeedWord.Widgets.ButtonManager;
 import com.btl.SpeedWord.Core.Engine;
@@ -11,6 +12,7 @@ import com.btl.SpeedWord.Graphics.TextureManager;
 import com.btl.SpeedWord.Logic.TurnPlay;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
@@ -104,6 +106,14 @@ public class PlayScene extends CustomScene {
         timeline.stop();
         SoundManager.getInstance().stopSound("play");
         SoundManager.getInstance().playSound("over");
+
+        Task<Boolean> task = new Task<>() {
+            protected Boolean call() throws Exception {
+                Point.getInstance().insertData(score);
+                return true;
+            }
+        };
+        new Thread(task).start();
 
         StackPane root = new StackPane();
         root.getChildren().add(TextureManager.getTextureManager().GetImageView("over"));
