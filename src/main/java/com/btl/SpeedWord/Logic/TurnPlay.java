@@ -26,11 +26,11 @@ public class TurnPlay {
         flag = false;
 
         wordMap = new HashMap<>();
-        wordMap.put("hello", "xin chào");
-        wordMap.put("english", "tiếng anh");
-        wordMap.put("sword", "thanh kiếm");
-        wordMap.put("bird", "chim");
-        wordMap.put("mouse", "chuột");
+        List<String> keyList = Word.getInstance().getKeyList();
+        Collections.shuffle(keyList);
+        for (int i = 0; i < 5; i++) {
+            wordMap.put(keyList.get(i), Word.getInstance().getWord(keyList.get(i)));
+        }
 
         List<String> id = new ArrayList<>();
         for (Integer i = 6; i <= 10; i++) {

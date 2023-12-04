@@ -3,6 +3,7 @@ package com.btl.SpeedWord.Core;
 import com.btl.SpeedWord.Scenes.MenuScene;
 import com.btl.SpeedWord.Scenes.SceneManager;
 import com.btl.SpeedWord.Graphics.TextureManager;
+import com.btl.SpeedWord.Sound.SoundManager;
 import javafx.stage.Stage;
 
 public class Engine {
@@ -21,6 +22,11 @@ public class Engine {
         stage.setScene(SceneManager.getSceneManager().getGameScene().peek().getScene());
         stage.setTitle(Title);
         stage.setResizable(false);
+        stage.setOnHidden(windowEvent -> {
+            SoundManager.getInstance().stopSound("menu");
+            SoundManager.getInstance().stopSound("play");
+        });
+
         stage.show();
     }
 
