@@ -45,6 +45,8 @@ import java.util.ArrayList;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class menuController implements Initializable {
     @FXML
@@ -343,6 +345,10 @@ public class menuController implements Initializable {
         new Thread(task).start();
     }
     
+    public void homeRankingTable() {
+        
+    }
+    
     /**
      * send a GET request of dictionary api.
      * @param word a word that we need its information.
@@ -369,33 +375,52 @@ public class menuController implements Initializable {
             
         } catch(Exception e) {}
         
-        return wordTranscripts.get(0);
+        try{
+            return wordTranscripts.get(0);
+        } catch (Exception e) {
+            return null;
+        }
         
     }
     
     public void searchSearch() throws Exception {
         
-        searchSpeakerUK.setVisible(true);
-        searchSpeakerUS.setVisible(true);
-        String word = search_searchBar.getText();
+        WordTranscript wordTranscript = sendGetDictionaryRequest(search_searchBar.getText());
         
-        WordTranscript wordTranscript = sendGetDictionaryRequest(word);
+        Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+        
+        if (wordTranscript == null) {
+            alert.setContentText("This word does not exist. Try another word.");
+            alert.showAndWait();
+            return;
+        }
+        
+        try {
+            for(int i = 0; i < 6; i++) {
+                if(wordTranscript.phonetics.get(i).text != null) {
+                    searchPhoneticUK.setText(wordTranscript.phonetics.get(i).text);
+                    try {
+                        searchPhoneticUS.setText(wordTranscript.phonetics.get(i + 1).text);
+                    } catch (Exception e) {
+                        searchPhoneticUS.setText(wordTranscript.phonetics.get(i).text);
+                    }
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            alert.setContentText("This word has not been updated. Try another word.");
+            alert.showAndWait();
+            return;
+        }
         
         searchWord.setText(wordTranscript.word.substring(0, 1).toUpperCase()
             + wordTranscript.word.substring(1));
         
-        for(int i = 0; i < 6; i++) {
-            
-            if(wordTranscript.phonetics.get(i).text != null) {
-                searchPhoneticUK.setText(wordTranscript.phonetics.get(i).text);
-                try {
-                    searchPhoneticUS.setText(wordTranscript.phonetics.get(i + 1).text);
-                } catch (Exception e) {
-                    searchPhoneticUS.setText(wordTranscript.phonetics.get(i).text);
-                }
-                break;
-            }
-        }
+        searchSpeakerUK.setVisible(true);
+        searchSpeakerUS.setVisible(true);
+        String word = search_searchBar.getText();
         
         StringBuilder sb1 = new StringBuilder()
                 .append("<html>")
@@ -468,6 +493,8 @@ public class menuController implements Initializable {
                     prepare.setString(2, getAccountData.username);
                     prepare.executeUpdate();
                 }
+                connect.close();
+                
                 return true;
             }
         };
