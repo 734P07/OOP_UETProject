@@ -4,6 +4,7 @@
     <texture source="PlayBackground.png" id="play"/>
     <texture source="GameOverPanel.png" id="over"/>
     <texture source="OptionPanel.png" id="option"/>
+    <texture source="ScorePanel.png" id="score"/>
 
     <texture source="OptionButton_Normal.png" id="option_n"/>
     <texture source="OptionButton_Hover.png" id="option_h"/>

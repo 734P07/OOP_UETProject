@@ -117,9 +117,16 @@ public class PlayScene extends CustomScene {
 
         StackPane root = new StackPane();
         root.getChildren().add(TextureManager.getTextureManager().GetImageView("over"));
-        root.getChildren().add(ButtonManager.getInstance().getButton("home", -100, 50));
-        root.getChildren().add(ButtonManager.getInstance().getButton("restart", 100, 50));
         ((StackPane) PlayScene.getInstance().getScene().getRoot()).getChildren().add(root);
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
+            // Hành động cần thực hiện sau độ trễ ở đây
+            root.getChildren().add(ButtonManager.getInstance().getButton("home", -100, 50));
+            root.getChildren().add(ButtonManager.getInstance().getButton("restart", 100, 50));
+        }));
+
+        // Bắt đầu Timeline
+        timeline.play();
     }
 
     public Text getScoreText() {

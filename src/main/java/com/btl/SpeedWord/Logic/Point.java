@@ -1,16 +1,19 @@
 package com.btl.SpeedWord.Logic;
 
 import com.btl.Database;
+import com.btl.SpeedWord.Scenes.MenuScene;
 import com.btl.getAccountData;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Point {
     private static Point instance;
-
-    private Map<Timestamp, Integer> pointMap;
+    private ArrayList<String> username;
+    private ArrayList<String> highscore;
+    private ArrayList<String> timeList;
 
     public static Point getInstance() {
         if (instance == null) {
@@ -19,7 +22,7 @@ public class Point {
         return instance;
     }
 
-    public void insertData(int gamePoints) {
+    public void insertData(int score) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -27,23 +30,51 @@ public class Point {
             connection = Database.connectDb();
 
             // Truy vấn để chèn dữ liệu vào bảng
-            String insertQuery = "INSERT INTO game_points (gamePoints, username, time) VALUES (?, ?, ?)";
+            String insertQuery = "SELECT highScore FROM game_points WHERE username = ?";
 
             // Tạo PreparedStatement
             preparedStatement = connection.prepareStatement(insertQuery);
+            preparedStatement.setString(1, getAccountData.username);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Thiết lập giá trị cho các tham số
-            preparedStatement.setInt(1, gamePoints);
-            preparedStatement.setString(2, getAccountData.username);
-            preparedStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+            if (resultSet.next()) {
+                int currentHighScore = resultSet.getInt("highScore");
 
-            // Thực thi truy vấn
-            preparedStatement.executeUpdate();
+                // So sánh với highScore hiện tại từ cơ sở dữ liệu và ghi đè nếu cần
+                if (score > currentHighScore) {
+                    // Cập nhật highScore trong cơ sở dữ liệu
+                    String updateQuery = "UPDATE game_points SET highScore = ?, time = ? WHERE username = ?";
+                    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                    updateStatement.setInt(1, score);
+                    updateStatement.setString(2, getAccountData.username);
+                    updateStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
 
-            // Xóa điểm cũ nếu quá giới hạn
-            checkAndDeleteExcessRows(connection);
+                    int rowsAffected = updateStatement.executeUpdate();
+                    if (rowsAffected > 0) {
+                        MenuScene.getInstance().Score();
+                        System.out.println("Đã ghi đè highScore thành công!");
+                    } else {
+                        System.out.println("Lỗi khi cố gắng ghi đè highScore.");
+                    }
+                } else {
+                    System.out.println("Không cần ghi đè highScore.");
+                }
+            } else {
+                // Chưa có dữ liệu cho người dùng này, chèn mới vào
+                String insertQuery1 = "INSERT INTO game_points (username, highScore, time) VALUES (?, ?, ?)";
+                PreparedStatement insertStatement = connection.prepareStatement(insertQuery1);
+                insertStatement.setString(1, getAccountData.username);
+                insertStatement.setInt(2, score);
+                insertStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
 
-            System.out.println("Dữ liệu được chèn thành công!");
+                int rowsAffected = insertStatement.executeUpdate();
+                if (rowsAffected > 0) {
+                    MenuScene.getInstance().Score();
+                    System.out.println("Dữ liệu được chèn thành công!");
+                } else {
+                    System.out.println("Lỗi khi cố gắng chèn dữ liệu.");
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -61,7 +92,11 @@ public class Point {
         }
     }
 
-    public void getDataByUsername() {
+    public void getAllData() {
+        username = new ArrayList<>();
+        highscore = new ArrayList<>();
+        timeList = new ArrayList<>();
+
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -70,28 +105,27 @@ public class Point {
             // Kết nối đến cơ sở dữ liệu
             connection = Database.connectDb();
 
-            // Truy vấn để lấy dữ liệu từ bảng với điều kiện username
-            String selectQuery = "SELECT * FROM ten_bang WHERE username = ?";
+            // Truy vấn để lấy tất cả dữ liệu từ bảng
+            String selectQuery = "SELECT * FROM game_points LIMIT 6";
 
             // Tạo PreparedStatement
             preparedStatement = connection.prepareStatement(selectQuery);
-
-            // Thiết lập giá trị cho tham số username
-            preparedStatement.setString(1, getAccountData.username);
 
             // Thực thi truy vấn và nhận kết quả
             resultSet = preparedStatement.executeQuery();
 
             // Xử lý kết quả trả về
             while (resultSet.next()) {
-                int gamePoints = resultSet.getInt("gamePoints");
+                Integer gamePoints = resultSet.getInt("highScore");
                 String retrievedUsername = resultSet.getString("username");
                 Timestamp time = resultSet.getTimestamp("time");
 
                 // Xử lý dữ liệu lấy được tại đây
-                pointMap = new HashMap<>();
-                pointMap.put(time, gamePoints);
+                username.add(retrievedUsername);
+                highscore.add(gamePoints.toString());
+                timeList.add(time.toString());
             }
+            System.out.println("Dữ liệu được lấy thành công");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -112,24 +146,15 @@ public class Point {
         }
     }
 
-    private void checkAndDeleteExcessRows(Connection connection) throws SQLException {
-        // Truy vấn để đếm số lượng hàng
-        String countQuery = "SELECT COUNT(*) AS row_count FROM game_points";
-        PreparedStatement countStatement = connection.prepareStatement(countQuery);
-        ResultSet resultSet = countStatement.executeQuery();
-
-        int rowCount = 0;
-        if (resultSet.next()) {
-            rowCount = resultSet.getInt("row_count");
-        }
-
-        // Nếu số lượng hàng vượt quá MAX_ROWS, xóa hàng có thời gian cũ nhất
-        if (rowCount >= 10) {
-            String deleteQuery = "DELETE FROM game_points ORDER BY time ASC LIMIT ?";
-            PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
-            deleteStatement.setInt(1, rowCount - 10);
-            deleteStatement.executeUpdate();
-        }
+    public ArrayList<String> getUsername() {
+        return username;
     }
 
+    public ArrayList<String> getHighscore() {
+        return highscore;
+    }
+
+    public ArrayList<String> getTimeList() {
+        return timeList;
+    }
 }
