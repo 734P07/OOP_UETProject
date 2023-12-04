@@ -42,6 +42,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.TableView;
 
 public class menuController implements Initializable {
     @FXML
@@ -67,6 +70,12 @@ public class menuController implements Initializable {
 
     @FXML
     private Label homeDayStreak;
+
+    @FXML
+    private LineChart<?, ?> homeProgressChart;
+
+    @FXML
+    private TableView<?> homeRankingTable;
 
     @FXML
     private Label homeSearchedWords;
@@ -302,6 +311,38 @@ public class menuController implements Initializable {
             + dailyWord.substring(1));
     }
     
+    public void homeProgressChart() {
+        
+        XYChart.Series series = new XYChart.Series();
+        
+        Task<Boolean> task = new Task<>() {
+            protected Boolean call() throws Exception {
+                connect = Database.connectDb();
+
+                prepare = connect.prepareStatement("SELECT day, COUNT(word) FROM searched_words WHERE username = ? GROUP BY day");
+                prepare.setString(1, getAccountData.username);
+
+                result = prepare.executeQuery();
+                while(result.next()) {
+                    series.getData().add(new XYChart.Data(result.getDate(1).toString(), result.getInt(2)));
+                }
+                
+                return false;
+            }
+        };    
+                
+        task.setOnSucceeded(e -> {
+            homeProgressChart.getData().clear();
+            homeProgressChart.getData().add(series);
+        });
+        
+        task.setOnFailed(e -> {
+             System.out.println("Display progress chart Failed");
+        });
+        
+        new Thread(task).start();
+    }
+    
     /**
      * send a GET request of dictionary api.
      * @param word a word that we need its information.
@@ -519,6 +560,7 @@ public class menuController implements Initializable {
         if (event.getSource() == homeBtn) {
             
             homeDisplaySearchedWords();
+            homeProgressChart();
             home_form.setVisible(true);
             homeBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
             
@@ -574,6 +616,7 @@ public class menuController implements Initializable {
         homeDisplayDailyWord();
         homeDisplayDayStreak();
         homeDisplaySearchedWords();
+        homeProgressChart();
         
         searchSpeakerUK.setVisible(false);
         searchSpeakerUS.setVisible(false);
