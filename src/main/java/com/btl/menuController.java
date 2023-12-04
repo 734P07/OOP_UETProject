@@ -21,6 +21,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.scene.web.WebView;
+import javafx.concurrent.Task;
 import app.jackychu.api.simplegoogletranslate.Language;
 import app.jackychu.api.simplegoogletranslate.SimpleGoogleTranslate;
 import java.io.IOException;
@@ -36,6 +38,9 @@ import javafx.scene.control.TextField;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class menuController implements Initializable {
@@ -58,22 +63,34 @@ public class menuController implements Initializable {
     private Button homeBtn;
 
     @FXML
+    private Label homeDailyWord;
+
+    @FXML
+    private Label homeDayStreak;
+
+    @FXML
+    private Label homeSearchedWords;
+
+    @FXML
     private AnchorPane home_form;
 
     @FXML
     private AnchorPane main_form;
 
     @FXML
-    private TextArea searchAntonyms;
+    private Button open_speedwordBtn;
+
+    @FXML
+    private WebView searchAntonyms;
 
     @FXML
     private Button searchBtn;
 
     @FXML
-    private TextArea searchDefinition;
+    private WebView searchDefinition;
 
     @FXML
-    private TextArea searchExample;
+    private WebView searchExample;
 
     @FXML
     private Label searchPhoneticUK;
@@ -88,7 +105,7 @@ public class menuController implements Initializable {
     private Button searchSpeakerUS;
 
     @FXML
-    private TextArea searchSynonyms;
+    private WebView searchSynonyms;
 
     @FXML
     private Label searchWord;
@@ -130,11 +147,11 @@ public class menuController implements Initializable {
     private Button translate_translateBtn;
 
     @FXML
-    private Button open_speedwordBtn;
-
-    @FXML
     private Label username;
-
+    
+    private Connection connect;
+    private PreparedStatement prepare;
+    private ResultSet result;
     
     private double x = 0;
     private double y = 0;
@@ -197,6 +214,94 @@ public class menuController implements Initializable {
         username.setText(getAccountData.username);
     }
     
+    public void homeDisplayDayStreak() {
+        Task<String> task = new Task<>() {
+            protected String call() throws Exception {
+                String sql = "SELECT DATEDIFF(CURDATE(), lastDay), dayStreak FROM day_streak WHERE username = ?";
+
+                connect = Database.connectDb();
+
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, getAccountData.username);
+
+                result = prepare.executeQuery();
+
+                if(result.next()) {
+                    int dayDiff = result.getInt(1);
+                    int dayStreak = result.getInt(2);
+                    
+                    if(dayDiff == 1) {
+                        prepare = connect.prepareStatement("UPDATE day_streak SET lastDay = CURDATE(), "
+                            + "dayStreak = dayStreak + 1 WHERE username = ?");
+                        prepare.setString(1, getAccountData.username);
+                        prepare.executeUpdate();
+                        dayStreak++;
+                    } else if(dayDiff != 0) {
+                        prepare = connect.prepareStatement("UPDATE day_streak SET lastDay = CURDATE(), "
+                            + "dayStreak = 1 WHERE username = ?");
+                        prepare.setString(1, getAccountData.username);
+                        prepare.executeUpdate();
+                        dayStreak = 1;
+                    }
+                    
+                    return Integer.toString(dayStreak);
+                }
+                
+                prepare = connect.prepareStatement("INSERT INTO `day_streak`(`lastDay`, `dayStreak`, `username`)"
+                        + " VALUES (CURDATE(),1,?)");
+                prepare.setString(1, getAccountData.username);
+                prepare.executeUpdate();
+                
+                return "1";
+            }
+        };    
+                
+        task.setOnSucceeded(e -> {
+            homeDayStreak.setText(task.getValue());
+        });
+        
+        task.setOnFailed(e -> {
+             System.out.println("Day Streak Failed");
+        });
+        
+        new Thread(task).start();
+    }
+    
+    public void homeDisplaySearchedWords() {
+        Task<String> task = new Task<>() {
+            protected String call() throws Exception {
+                connect = Database.connectDb();
+
+                prepare = connect.prepareStatement("SELECT COUNT(word) FROM searched_words WHERE username = ?");
+                prepare.setString(1, getAccountData.username);
+
+                result = prepare.executeQuery();
+
+                if(result.next()) {
+                    return Integer.toString(result.getInt(1));
+                }
+                
+                return "0";
+            }
+        };    
+                
+        task.setOnSucceeded(e -> {
+            homeSearchedWords.setText(task.getValue());
+        });
+        
+        task.setOnFailed(e -> {
+             System.out.println("Get Search Words Failed");
+        });
+        
+        new Thread(task).start();
+    }
+    
+    public void homeDisplayDailyWord() {
+        String dailyWord = RandomWordGetAPI.getSentRequest().getARandomWord();
+        homeDailyWord.setText(dailyWord.substring(0, 1).toUpperCase()
+            + dailyWord.substring(1));
+    }
+    
     /**
      * send a GET request of dictionary api.
      * @param word a word that we need its information.
@@ -227,14 +332,10 @@ public class menuController implements Initializable {
         
     }
     
-    public void appendTextLn(TextArea textArea, String string) {
-        if(string != null) {
-            textArea.appendText(string + "\n");
-        }
-    }
-    
     public void searchSearch() throws Exception {
         
+        searchSpeakerUK.setVisible(true);
+        searchSpeakerUS.setVisible(true);
         String word = search_searchBar.getText();
         
         WordTranscript wordTranscript = sendGetDictionaryRequest(word);
@@ -255,25 +356,82 @@ public class menuController implements Initializable {
             }
         }
         
-        searchDefinition.clear();
-        searchExample.clear();
-        searchSynonyms.clear();
-        searchAntonyms.clear();
+        StringBuilder sb1 = new StringBuilder()
+                .append("<html>")
+                .append("<body>")
+                .append("<h1>Definitions</h1>");
+        StringBuilder sb2 = new StringBuilder()
+                .append("<html>")
+                .append("<body>")
+                .append("<h1>Examples</h1>");
+        StringBuilder sb3 = new StringBuilder()
+                .append("<html>")
+                .append("<body>")
+                .append("<h1>Synonyms</h1>");
+        StringBuilder sb4 = new StringBuilder()
+                .append("<html>")
+                .append("<body>")
+                .append("<h1>Antonyms</h1>");
         
         for (WordTranscript.meaning meaning : wordTranscript.meanings) {
-            appendTextLn(searchDefinition, meaning.partOfSpeech);
+            sb1.append("<h2>" + meaning.partOfSpeech + "</h2>");
             for (WordTranscript.definition definition : meaning.definitions) {
-                appendTextLn(searchDefinition, translate(Language.en, Language.vi,definition.definition));
-                appendTextLn(searchExample, definition.example);
+                //appendTextLn(searchDefinition, translate(Language.en, Language.vi,definition.definition));
+                sb1.append("<p>" + definition.definition + "</p>");
+                if(definition.example != null)
+                    sb2.append("<p>" + definition.example + "</p>");
             }
             for(String synonym : meaning.synonyms) {
-                appendTextLn(searchSynonyms, synonym);
+                //appendTextLn(searchSynonyms, synonym);
+                sb3.append("<p>" + synonym + "</p>");
             }
             for(String antonym : meaning.antonyms) {
-                appendTextLn(searchAntonyms, antonym);
+                //appendTextLn(searchAntonyms, antonym);
+                sb4.append("<p>" + antonym + "</p>");
             }
         }
         
+        sb1.append("</body></html>");
+        sb2.append("</body></html>");
+        sb3.append("</body></html>");
+        sb4.append("</body></html>");
+        
+        searchDefinition.getEngine().loadContent(sb1.toString());
+        searchExample.getEngine().loadContent(sb2.toString());
+        searchSynonyms.getEngine().loadContent(sb3.toString());
+        searchAntonyms.getEngine().loadContent(sb4.toString());
+        
+        searchDefinition.getEngine().
+                setUserStyleSheetLocation(getClass().getResource("searchDesign.css").toString());
+        searchExample.getEngine().
+                setUserStyleSheetLocation(getClass().getResource("searchDesign.css").toString());
+        searchSynonyms.getEngine().
+                setUserStyleSheetLocation(getClass().getResource("searchDesign.css").toString());
+        searchAntonyms.getEngine().
+                setUserStyleSheetLocation(getClass().getResource("searchDesign.css").toString());
+        
+        Task<Boolean> task = new Task<>() {
+            protected Boolean call() throws Exception {
+                connect = Database.connectDb();
+
+                prepare = connect.prepareStatement("SELECT word FROM searched_words WHERE username = ? AND word = ?");
+                prepare.setString(1, getAccountData.username);
+                prepare.setString(2, word);
+
+                result = prepare.executeQuery();
+
+                if(!result.next()) {
+                    prepare = connect.prepareStatement("INSERT INTO `searched_words`(`word`, `username`, `day`) "
+                            + "VALUES (?,?,CURDATE())");
+                    prepare.setString(1, word);
+                    prepare.setString(2, getAccountData.username);
+                    prepare.executeUpdate();
+                }
+                return true;
+            }
+        };
+        
+        new Thread(task).start();
     }
     
     /**
@@ -360,6 +518,7 @@ public class menuController implements Initializable {
         
         if (event.getSource() == homeBtn) {
             
+            homeDisplaySearchedWords();
             home_form.setVisible(true);
             homeBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
             
@@ -412,6 +571,12 @@ public class menuController implements Initializable {
         displayUsername();
         startNav();
         
+        homeDisplayDailyWord();
+        homeDisplayDayStreak();
+        homeDisplaySearchedWords();
+        
+        searchSpeakerUK.setVisible(false);
+        searchSpeakerUS.setVisible(false);
     }
 
     /**
