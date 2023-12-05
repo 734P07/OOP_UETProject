@@ -635,6 +635,16 @@ public class loginController implements Initializable{
         create_form.setVisible(false);
         confirmPasswordLabel.setVisible(false);
         verifyCreateAccount_form.setVisible(false);
+        
+        confirm_password.textProperty().addListener((observable,oldValue,newValue) -> {
+            if(create_password.getText().equals(newValue)) {
+                confirmPasswordLabel.setText("Password Match");
+                confirmPasswordLabel.setStyle("-fx-text-fill: green;");
+            } else {
+                confirmPasswordLabel.setText("Password does not match");
+                confirmPasswordLabel.setStyle("-fx-text-fill: red;");
+            }
+        });
     }
     
     public void showWelcomeScreen() {
