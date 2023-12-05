@@ -53,7 +53,6 @@ public class MenuScene extends CustomScene {
         scene = new Scene(root, Engine.SCREEN_WIDTH, Engine.SCREEN_HEIGHT);
         scene.getStylesheets().add(getClass().getResource("transparentButton.css").toExternalForm());
         Option();
-        Score();
 
         SoundManager.getInstance().playSound("menu");
     }
@@ -143,6 +142,7 @@ public class MenuScene extends CustomScene {
     }
 
     public void OpenScore() {
+        Score();
         scene.lookup("#score").setVisible(true);
     }
 
