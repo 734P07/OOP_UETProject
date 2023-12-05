@@ -46,8 +46,8 @@ public class Point {
                     String updateQuery = "UPDATE game_points SET highScore = ?, time = ? WHERE username = ?";
                     PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
                     updateStatement.setInt(1, score);
-                    updateStatement.setString(2, getAccountData.username);
-                    updateStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+                    updateStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+                    updateStatement.setString(3, getAccountData.username);
 
                     int rowsAffected = updateStatement.executeUpdate();
                     if (rowsAffected > 0) {
