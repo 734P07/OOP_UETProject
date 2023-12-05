@@ -4,10 +4,14 @@
  */
 package com.btl.SpeedWord.Logic;
 
+import com.btl.SpeedWord.Graphics.TextureManager;
 import com.btl.SpeedWord.Scenes.PlayScene;
+import com.btl.SpeedWord.Scenes.SceneManager;
 import com.btl.SpeedWord.Widgets.ButtonManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -86,6 +90,25 @@ public class TurnPlay {
             flag = false;
             return true;
         } else {
+            Integer heart = PlayScene.getInstance().getHeart();
+            heart = heart - 1;
+            PlayScene.getInstance().setHeart(heart);
+            ImageView imageView = null;
+            switch (heart) {
+                case 2:
+                    imageView = TextureManager.getTextureManager().GetImageView("heart_2", -330, -260);
+                    ((StackPane) PlayScene.getInstance().getScene().getRoot()).getChildren().add(imageView);
+                    break;
+                case 1:
+                    imageView = TextureManager.getTextureManager().GetImageView("heart_1", -330, -260);
+                    ((StackPane) PlayScene.getInstance().getScene().getRoot()).getChildren().add(imageView);
+                    break;
+                case 0:
+                    imageView = TextureManager.getTextureManager().GetImageView("heart_0", -330, -260);
+                    ((StackPane) PlayScene.getInstance().getScene().getRoot()).getChildren().add(imageView);
+                    PlayScene.getInstance().gameOver();
+                    break;
+            }
             button1.getStyleClass().add("button-false");
             button2.getStyleClass().add("button-false");
             button1.setDisable(true);

@@ -31,7 +31,7 @@ public class ButtonManager {
             SceneManager.getSceneManager().Load();
         } );
         createTextureButton("score", new String[]{"score_n", "score_h", "score_p"}, () -> {
-
+            MenuScene.getInstance().OpenScore();
         });
         createTextureButton("option", new String[]{"option_n", "option_h", "option_p"}, () -> {
             MenuScene.getInstance().OpenOption();
@@ -47,8 +47,11 @@ public class ButtonManager {
             SceneManager.getSceneManager().ChangeScene(PlayScene.getInstance());
             SceneManager.getSceneManager().Load();
         });
-        createTextureButton("x", new String[]{"x_n", "x_h", "x_p"}, () -> {
+        createTextureButton("exitOption", new String[]{"x_n", "x_h", "x_p"}, () -> {
             MenuScene.getInstance().ExitOption();
+        });
+        createTextureButton("exitScore", new String[]{"x_n", "x_h", "x_p"}, () -> {
+            MenuScene.getInstance().ExitScore();
         });
 
         for (int i = 1; i <= 10; i++) {

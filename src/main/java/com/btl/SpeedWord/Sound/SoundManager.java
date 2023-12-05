@@ -29,6 +29,7 @@ public class SoundManager {
         addSound("menu", "MilkyWay.mp3", true);
         addSound("click", "click.wav", false);
         addSound("play", "PlayMusic.wav", false);
+        addSound("over", "Over.mp3", false);
     }
 
     // Thêm âm thanh vào Map

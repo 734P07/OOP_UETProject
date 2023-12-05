@@ -4,6 +4,7 @@
  */
 package com.btl.SpeedWord.Scenes;
 
+import com.btl.SpeedWord.Logic.Point;
 import com.btl.SpeedWord.Sound.SoundManager;
 import com.btl.SpeedWord.Widgets.ButtonManager;
 import com.btl.SpeedWord.Core.Engine;
@@ -11,12 +12,16 @@ import com.btl.SpeedWord.Graphics.TextureManager;
 import com.btl.SpeedWord.Logic.TurnPlay;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
 
 public class PlayScene extends CustomScene {
     private static PlayScene s_Instance;
@@ -24,6 +29,7 @@ public class PlayScene extends CustomScene {
     private Timeline timeline;
     private Text scoreText;
     private Integer score;
+    private Integer heart;
 
     public void Init() {
         // Load font
@@ -44,14 +50,16 @@ public class PlayScene extends CustomScene {
         root.getChildren().add(ButtonManager.getInstance().getButton("10", 200, 270, 250, 80));
 
         // Score init
-        {
-            score = 0;
-            scoreText = new Text(score.toString());
-            scoreText.setFont(customFont);
-            scoreText.setTranslateX(0);
-            scoreText.setTranslateY(-250);
-            root.getChildren().add(scoreText);
-        }
+        score = 0;
+        scoreText = new Text(score.toString());
+        scoreText.setFont(customFont);
+        scoreText.setTranslateX(0);
+        scoreText.setTranslateY(-250);
+        root.getChildren().add(scoreText);
+
+        // Heart init
+        heart = 3;
+        root.getChildren().add(TextureManager.getTextureManager().GetImageView("heart_3", -330, -260));
 
         // Timer Bar
         {
@@ -68,8 +76,7 @@ public class PlayScene extends CustomScene {
                         if (progress > 0) {
                             progressBar.setProgress(Math.max(0, progress - 0.00016)); // Giảm giá trị progress mỗi 0.01 giây
                         } else {
-                            StackPane stk = (StackPane) scene.getRoot();
-                            stk.getChildren().add(gameOver());
+                            gameOver();
                             timeline.stop();
                         }
                     }),
@@ -91,16 +98,35 @@ public class PlayScene extends CustomScene {
         SoundManager.getInstance().playSound("play");
     }
 
-    public StackPane gameOver() {
+    public void gameOver() {
         for (Integer i = 1; i <= 10; i++) {
             ButtonManager.getInstance().getButton(i.toString()).setDisable(true);
         }
 
+        timeline.stop();
+        SoundManager.getInstance().stopSound("play");
+        SoundManager.getInstance().playSound("over");
+
+        Task<Boolean> task = new Task<>() {
+            protected Boolean call() throws Exception {
+                Point.getInstance().insertData(score);
+                return true;
+            }
+        };
+        new Thread(task).start();
+
         StackPane root = new StackPane();
         root.getChildren().add(TextureManager.getTextureManager().GetImageView("over"));
-        root.getChildren().add(ButtonManager.getInstance().getButton("home", -100, 50));
-        root.getChildren().add(ButtonManager.getInstance().getButton("restart", 100, 50));
-        return root;
+        ((StackPane) PlayScene.getInstance().getScene().getRoot()).getChildren().add(root);
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
+            // Hành động cần thực hiện sau độ trễ ở đây
+            root.getChildren().add(ButtonManager.getInstance().getButton("home", -100, 50));
+            root.getChildren().add(ButtonManager.getInstance().getButton("restart", 100, 50));
+        }));
+
+        // Bắt đầu Timeline
+        timeline.play();
     }
 
     public Text getScoreText() {
@@ -119,6 +145,14 @@ public class PlayScene extends CustomScene {
         this.score = score;
     }
 
+    public Integer getHeart() {
+        return heart;
+    }
+
+    public void setHeart(Integer heart) {
+        this.heart = heart;
+    }
+
     @Override
     public Scene getScene() {
         return scene;
@@ -126,7 +160,9 @@ public class PlayScene extends CustomScene {
 
     @Override
     public void Exit() {
+        timeline.stop();
         SoundManager.getInstance().stopSound("play");
+        SoundManager.getInstance().stopSound("over");
     }
 
     @Override

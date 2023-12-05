@@ -12,6 +12,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
@@ -184,6 +186,7 @@
                                                       <Font name="Tahoma Bold" size="24.0" />
                                                    </font>
                                                 </Label>
+                                                <Button fx:id="homeDailyWordBtn" layoutX="107.0" layoutY="25.0" mnemonicParsing="false" onAction="#switchForm" prefHeight="126.0" prefWidth="265.0" style="-fx-background-color: transparent;" styleClass="btn" stylesheets="@menuDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                        </children>
@@ -229,9 +232,9 @@
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font></TextField>
-                                    <Button fx:id="search_searchBtn" layoutX="303.0" layoutY="14.0" mnemonicParsing="false" onAction="#searchSearch" prefHeight="34.0" prefWidth="83.0" text="Search">
+                                    <Button fx:id="search_searchBtn" layoutX="303.0" layoutY="14.0" mnemonicParsing="false" onAction="#searchSearch" prefHeight="34.0" prefWidth="83.0" style="-fx-background-color: #219a6b;" styleClass="search-searchBtn" stylesheets="@menuDesign.css" text="Search" textFill="WHITE">
                                        <graphic>
-                                          <FontAwesomeIconView glyphName="SEARCH" size="1.5em" />
+                                          <FontAwesomeIconView fill="WHITE" glyphName="SEARCH" size="1.5em" />
                                        </graphic>
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
@@ -252,7 +255,7 @@
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="searchSpeakerUK" contentDisplay="RIGHT" layoutX="25.0" layoutY="116.0" mnemonicParsing="false" onAction="#searchSpeaker" style="-fx-background-color: transparent;" text="UK">
+                                    <Button fx:id="searchSpeakerUK" contentDisplay="RIGHT" layoutX="25.0" layoutY="116.0" mnemonicParsing="false" onAction="#searchSpeaker" style="-fx-background-color: transparent;" styleClass="btn" stylesheets="@menuDesign.css" text="UK">
                                        <graphic>
                                           <FontAwesomeIconView glyphName="VOLUME_UP" size="1.5em" />
                                        </graphic>
@@ -260,7 +263,7 @@
                                           <Font name="Tahoma" size="12.0" />
                                        </font>
                                     </Button>
-                                    <Button fx:id="searchSpeakerUS" contentDisplay="RIGHT" layoutX="25.0" layoutY="138.0" mnemonicParsing="false" onAction="#searchSpeaker" style="-fx-background-color: transparent;" text="US">
+                                    <Button fx:id="searchSpeakerUS" contentDisplay="RIGHT" layoutX="25.0" layoutY="138.0" mnemonicParsing="false" onAction="#searchSpeaker" style="-fx-background-color: transparent;" styleClass="btn" stylesheets="@menuDesign.css" text="US">
                                        <graphic>
                                           <FontAwesomeIconView glyphName="VOLUME_UP" size="1.5em" />
                                        </graphic>
@@ -316,9 +319,9 @@
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font></TextArea>
-                                    <Button fx:id="translate_swapBtn" layoutX="414.0" layoutY="16.0" mnemonicParsing="false" onAction="#translateSwap">
+                                    <Button fx:id="translate_swapBtn" layoutX="414.0" layoutY="16.0" mnemonicParsing="false" onAction="#translateSwap" style="-fx-background-color: #219a6b;" styleClass="btn" stylesheets="@menuDesign.css">
                                        <graphic>
-                                          <FontAwesomeIconView glyphName="EXCHANGE" size="1.5em" />
+                                          <FontAwesomeIconView fill="WHITE" glyphName="EXCHANGE" size="1.5em" />
                                        </graphic>
                                     </Button>
                                     <Label fx:id="translate_beforeLanguage" alignment="CENTER" layoutX="30.0" layoutY="20.0" prefHeight="18.0" prefWidth="380.0" text="English" textAlignment="CENTER">
@@ -335,7 +338,7 @@
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font></TextArea>
-                                    <Button fx:id="translate_translateBtn" layoutX="756.0" layoutY="484.0" mnemonicParsing="false" onAction="#translateTranslate" text="Translate">
+                                    <Button fx:id="translate_translateBtn" layoutX="756.0" layoutY="484.0" mnemonicParsing="false" onAction="#translateTranslate" style="-fx-background-color: #219a6b;" styleClass="btn" stylesheets="@menuDesign.css" text="Translate" textFill="WHITE">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
@@ -344,9 +347,34 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="games_form" layoutX="111.0" layoutY="20.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="games_form" layoutX="111.0" layoutY="20.0" prefHeight="555.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <Button fx:id="open_speedwordBtn" layoutX="404.0" layoutY="264.0" mnemonicParsing="false" onAction="#startSpeedWord" text="SpeedWord" />
+                              <Button fx:id="open_speedwordBtn" layoutX="104.0" layoutY="198.0" mnemonicParsing="false" onAction="#startSpeedWord" styleClass="btn" stylesheets="@menuDesign.css">
+                                 <graphic>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@Sp.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Button>
+                              <Button fx:id="open_game2" layoutX="361.0" layoutY="198.0" mnemonicParsing="false" styleClass="btn" stylesheets="@menuDesign.css">
+                                 <graphic>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@Incoming.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="open_game3" layoutX="627.0" layoutY="198.0" mnemonicParsing="false" styleClass="btn" stylesheets="@menuDesign.css">
+                                 <graphic>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@Incoming.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
                            </children></AnchorPane>
                         <AnchorPane fx:id="contact_form" layoutX="77.0" layoutY="59.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>

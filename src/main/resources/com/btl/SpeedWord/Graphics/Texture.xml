@@ -4,6 +4,7 @@
     <texture source="PlayBackground.png" id="play"/>
     <texture source="GameOverPanel.png" id="over"/>
     <texture source="OptionPanel.png" id="option"/>
+    <texture source="ScorePanel.png" id="score"/>
 
     <texture source="OptionButton_Normal.png" id="option_n"/>
     <texture source="OptionButton_Hover.png" id="option_h"/>
@@ -27,4 +28,8 @@
     <texture source="XButton_Hover.png" id="x_h"/>
     <texture source="XButton_Press.png" id="x_p"/>
 
+    <texture source="Heart_3.png" id="heart_3"/>
+    <texture source="Heart_2.png" id="heart_2"/>
+    <texture source="Heart_1.png" id="heart_1"/>
+    <texture source="Heart_0.png" id="heart_0"/>
 </Textures>

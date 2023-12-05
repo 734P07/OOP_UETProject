@@ -5,6 +5,8 @@ import com.btl.SpeedWord.Core.Engine;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import com.btl.SpeedWord.Sound.SoundManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -75,6 +77,9 @@ public class menuController implements Initializable {
     private Label homeDailyWord;
 
     @FXML
+    private Button homeDailyWordBtn;
+
+    @FXML
     private Label homeDayStreak;
 
     @FXML
@@ -100,6 +105,12 @@ public class menuController implements Initializable {
 
     @FXML
     private Button open_speedwordBtn;
+
+    @FXML
+    private Button open_game2;
+
+    @FXML
+    private Button open_game3;
 
     @FXML
     private WebView searchAntonyms;
@@ -179,6 +190,15 @@ public class menuController implements Initializable {
     
     private double x = 0;
     private double y = 0;
+
+    private static menuController instance;
+
+    public static menuController getInstance() {
+        if (instance == null) {
+            instance = new menuController();
+        }
+        return instance;
+    }
     
     /**
      *  close program.
@@ -636,7 +656,7 @@ public class menuController implements Initializable {
      * switch form whenever you click the navigation button
      * @param event event catcher
      */
-    public void switchForm(ActionEvent event) {
+    public void switchForm(ActionEvent event) throws Exception {
         
         home_form.setVisible(false);
         search_form.setVisible(false);
@@ -651,8 +671,9 @@ public class menuController implements Initializable {
         contactBtn.setStyle("-fx-background-color:transparent");
         
         if (event.getSource() == homeBtn) {
-            
+            homeDisplayDayStreak();
             homeDisplaySearchedWords();
+            homeDisplayDailyWord();
             homeProgressChart();
             homeRankingTable();
             home_form.setVisible(true);
@@ -669,7 +690,9 @@ public class menuController implements Initializable {
             translateBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
 
         } else if (event.getSource() == gamesBtn) {
-            
+            open_speedwordBtn.setStyle("-fx-background-color:transparent");
+            open_game2.setStyle("-fx-background-color:transparent");
+            open_game3.setStyle("-fx-background-color:transparent");
             games_form.setVisible(true);
             gamesBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
 
@@ -678,6 +701,11 @@ public class menuController implements Initializable {
             contact_form.setVisible(true);
             contactBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
 
+        } else if (event.getSource() == homeDailyWordBtn) {
+            search_form.setVisible(true);
+            searchBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
+            search_searchBar.setText(homeDailyWord.getText());
+            searchSearch();
         }
 
     }
@@ -725,6 +753,12 @@ public class menuController implements Initializable {
      */
     public void startSpeedWord() {
         Engine.getEngine().start();
+        open_speedwordBtn.setDisable(true);
         System.out.println("SpeedWord start!");
+        Engine.getStage().setOnHidden(e -> {
+            open_speedwordBtn.setDisable(false);
+            SoundManager.getInstance().stopSound("menu");
+            SoundManager.getInstance().stopSound("play");
+        });
     }
 }

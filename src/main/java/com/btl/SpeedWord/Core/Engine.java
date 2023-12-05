@@ -22,11 +22,6 @@ public class Engine {
         stage.setScene(SceneManager.getSceneManager().getGameScene().peek().getScene());
         stage.setTitle(Title);
         stage.setResizable(false);
-        stage.setOnHidden(windowEvent -> {
-            SoundManager.getInstance().stopSound("menu");
-            SoundManager.getInstance().stopSound("play");
-        });
-
         stage.show();
     }
 
