@@ -75,6 +75,9 @@ public class menuController implements Initializable {
     private Label homeDailyWord;
 
     @FXML
+    private Button homeDailyWordBtn;
+
+    @FXML
     private Label homeDayStreak;
 
     @FXML
@@ -645,7 +648,7 @@ public class menuController implements Initializable {
      * switch form whenever you click the navigation button
      * @param event event catcher
      */
-    public void switchForm(ActionEvent event) {
+    public void switchForm(ActionEvent event) throws Exception {
         
         home_form.setVisible(false);
         search_form.setVisible(false);
@@ -660,8 +663,9 @@ public class menuController implements Initializable {
         contactBtn.setStyle("-fx-background-color:transparent");
         
         if (event.getSource() == homeBtn) {
-            
+            homeDisplayDayStreak();
             homeDisplaySearchedWords();
+            homeDisplayDailyWord();
             homeProgressChart();
             homeRankingTable();
             home_form.setVisible(true);
@@ -687,6 +691,11 @@ public class menuController implements Initializable {
             contact_form.setVisible(true);
             contactBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
 
+        } else if (event.getSource() == homeDailyWordBtn) {
+            search_form.setVisible(true);
+            searchBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
+            search_searchBar.setText(homeDailyWord.getText());
+            searchSearch();
         }
 
     }
