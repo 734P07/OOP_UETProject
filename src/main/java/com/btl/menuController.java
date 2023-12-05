@@ -5,6 +5,8 @@ import com.btl.SpeedWord.Core.Engine;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import com.btl.SpeedWord.Sound.SoundManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -79,6 +81,12 @@ public class menuController implements Initializable {
 
     @FXML
     private Button open_speedwordBtn;
+
+    @FXML
+    private Button open_game2;
+
+    @FXML
+    private Button open_game3;
 
     @FXML
     private WebView searchAntonyms;
@@ -542,7 +550,9 @@ public class menuController implements Initializable {
             translateBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
 
         } else if (event.getSource() == gamesBtn) {
-            
+            open_speedwordBtn.setStyle("-fx-background-color:transparent");
+            open_game2.setStyle("-fx-background-color:transparent");
+            open_game3.setStyle("-fx-background-color:transparent");
             games_form.setVisible(true);
             gamesBtn.setStyle("-fx-background-color:linear-gradient(to bottom right, #3a4368, #28966c);");
 
@@ -595,9 +605,10 @@ public class menuController implements Initializable {
         Engine.getEngine().start();
         open_speedwordBtn.setDisable(true);
         System.out.println("SpeedWord start!");
-    }
-
-    public void turnOnSpeedWordBtn() {
-        open_speedwordBtn.setDisable(false);
+        Engine.getStage().setOnHidden(e -> {
+            open_speedwordBtn.setDisable(false);
+            SoundManager.getInstance().stopSound("menu");
+            SoundManager.getInstance().stopSound("play");
+        });
     }
 }

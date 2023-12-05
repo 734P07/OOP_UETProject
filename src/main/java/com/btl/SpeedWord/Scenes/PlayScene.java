@@ -160,6 +160,7 @@ public class PlayScene extends CustomScene {
 
     @Override
     public void Exit() {
+        timeline.stop();
         SoundManager.getInstance().stopSound("play");
         SoundManager.getInstance().stopSound("over");
     }
