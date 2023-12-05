@@ -43,10 +43,11 @@
                   <Button fx:id="createAccountBtn" layoutX="40.0" layoutY="341.0" mnemonicParsing="false" onAction="#loginCreateAccount" prefHeight="30.0" prefWidth="220.0" styleClass="btn" stylesheets="@loginDesign.css" text="Create new account" textFill="WHITE" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="create_form" layoutX="300.0" layoutY="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" visible="false">
+            <AnchorPane fx:id="create_form" layoutX="300.0" layoutY="3.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0">
                <children>
                   <TextField fx:id="create_username" layoutX="14.0" layoutY="94.0" prefHeight="26.0" prefWidth="275.0" promptText="username" />
                   <PasswordField fx:id="create_password" layoutX="16.0" layoutY="149.0" prefHeight="26.0" prefWidth="275.0" promptText="password" />
+                  <PasswordField fx:id="confirm_password" layoutX="16.0" layoutY="209.0" prefHeight="26.0" prefWidth="275.0" promptText="confirm password" />
                   <Label layoutX="16.0" layoutY="77.0" prefHeight="17.0" prefWidth="58.0" text="Username" />
                   <Label layoutX="16.0" layoutY="132.0" text="Password" />
                   <TextField fx:id="create_email" layoutX="16.0" layoutY="271.0" prefHeight="26.0" prefWidth="275.0" promptText="email@gmail.com" />
@@ -68,7 +69,6 @@
                         <Font name="Tahoma Bold" size="15.0" />
                      </font>
                   </Label>
-                  <PasswordField fx:id="confirm_password" layoutX="16.0" layoutY="209.0" prefHeight="26.0" prefWidth="275.0" promptText="confirm password" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="verifyCreateAccount_form" layoutX="300.0" layoutY="3.0" prefHeight="400.0" prefWidth="300.0" visible="false">

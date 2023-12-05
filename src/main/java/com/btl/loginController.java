@@ -320,6 +320,7 @@ public class loginController implements Initializable{
                         showAlert(AlertType.INFORMATION, "Account Created", "Your account has been successfully created.");
                         resetCreateAccountForm();
                         loadingStage.hide();
+                        enableAllButtons();
                     });
                 }
                 return null;
