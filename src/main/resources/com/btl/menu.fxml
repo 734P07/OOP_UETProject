@@ -349,7 +349,7 @@
                         </AnchorPane>
                         <AnchorPane fx:id="games_form" layoutX="111.0" layoutY="20.0" prefHeight="555.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <Button fx:id="open_speedwordBtn" layoutX="104.0" layoutY="198.0" mnemonicParsing="false" onAction="#startSpeedWord">
+                              <Button fx:id="open_speedwordBtn" layoutX="104.0" layoutY="198.0" mnemonicParsing="false" onAction="#startSpeedWord" styleClass="btn" stylesheets="@menuDesign.css">
                                  <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -357,7 +357,7 @@
                                        </image>
                                     </ImageView>
                                  </graphic></Button>
-                              <Button fx:id="open_game2" layoutX="361.0" layoutY="198.0" mnemonicParsing="false">
+                              <Button fx:id="open_game2" layoutX="361.0" layoutY="198.0" mnemonicParsing="false" styleClass="btn" stylesheets="@menuDesign.css">
                                  <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -366,7 +366,7 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Button fx:id="open_game3" layoutX="627.0" layoutY="198.0" mnemonicParsing="false">
+                              <Button fx:id="open_game3" layoutX="627.0" layoutY="198.0" mnemonicParsing="false" styleClass="btn" stylesheets="@menuDesign.css">
                                  <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
