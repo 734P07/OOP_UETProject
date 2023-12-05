@@ -157,16 +157,7 @@ public class loginController implements Initializable{
      */
     public void loginController() throws IOException {
         Stage loadingStage = new Stage();
-        ProgressBar progressBar = new ProgressBar();
-        progressBar.setPrefSize(300, 30);
-        VBox container = new VBox(progressBar);
-        container.setAlignment(Pos.CENTER);
-        Scene new_scene = new Scene(new Group(progressBar),300,30);
-        loadingStage.setScene(new_scene);
-        loadingStage.setTitle("Loading...");
-        loadingStage.setMinWidth(300);
-        loadingStage.setMinHeight(30);
-        loadingStage.show();
+        showLoadingStriped(loadingStage);
         
         disableAllButtons();
         
@@ -257,16 +248,7 @@ public class loginController implements Initializable{
                 confirmPasswordLabel.setStyle("-fx-text-fill: green;");
                 
                 Stage loadingStage = new Stage();
-                ProgressBar progressBar = new ProgressBar();
-                progressBar.setPrefSize(300, 30);
-                VBox container = new VBox(progressBar);
-                container.setAlignment(Pos.CENTER);
-                Scene new_scene = new Scene(new Group(progressBar),300,30);
-                loadingStage.setScene(new_scene);
-                loadingStage.setTitle("Loading...");
-                loadingStage.setMinWidth(300);
-                loadingStage.setMinHeight(30);
-                loadingStage.show();
+                showLoadingStriped(loadingStage);
                 
                 Task<Boolean> checkUserTask = new Task<Boolean>() {
                     @Override
@@ -316,16 +298,7 @@ public class loginController implements Initializable{
     
     public void addUserToDB() {
         Stage loadingStage = new Stage();
-        ProgressBar progressBar = new ProgressBar();
-        progressBar.setPrefSize(300, 30);
-        VBox container = new VBox(progressBar);
-        container.setAlignment(Pos.CENTER);
-        Scene new_scene = new Scene(new Group(progressBar),300,30);
-        loadingStage.setScene(new_scene);
-        loadingStage.setTitle("Loading...");
-        loadingStage.setMinWidth(300);
-        loadingStage.setMinHeight(30);
-        loadingStage.show();
+        showLoadingStriped(loadingStage);
         
         disableAllButtons();
         
@@ -384,16 +357,7 @@ public class loginController implements Initializable{
 
     public void isEmailExists(String email) {
         Stage loadingStage = new Stage();
-        ProgressBar progressBar = new ProgressBar();
-        progressBar.setPrefSize(300, 30);
-        VBox container = new VBox(progressBar);
-        container.setAlignment(Pos.CENTER);
-        Scene new_scene = new Scene(new Group(progressBar),300,30);
-        loadingStage.setScene(new_scene);
-        loadingStage.setTitle("Loading...");
-        loadingStage.setMinWidth(300);
-        loadingStage.setMinHeight(30);
-        loadingStage.show();
+        showLoadingStriped(loadingStage);
         
         disableAllButtons();
         
@@ -483,16 +447,7 @@ public class loginController implements Initializable{
     
     public void resetPasswordDB(String email, String newPw) {
         Stage loadingStage = new Stage();
-        ProgressBar progressBar = new ProgressBar();
-        progressBar.setPrefSize(300, 30);
-        VBox container = new VBox(progressBar);
-        container.setAlignment(Pos.CENTER);
-        Scene new_scene = new Scene(new Group(progressBar),300,30);
-        loadingStage.setScene(new_scene);
-        loadingStage.setTitle("Loading...");
-        loadingStage.setMinWidth(300);
-        loadingStage.setMinHeight(30);
-        loadingStage.show();
+        showLoadingStriped(loadingStage);
         
         disableAllButtons();
         
@@ -532,6 +487,53 @@ public class loginController implements Initializable{
             enableAllButtons();
         });
         new Thread(task).start();
+    }
+    
+    public void showLoadingStriped(Stage loadingStage) {
+        WebView webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
+        String htmlContent = "<html>" +
+                             "<head>" +
+                             "<style>" +
+                             "html, body {" +
+                             "  margin: 0;" +
+                             "  padding: 0;" +
+                             "  width: 100%;" +
+                             "  height: 100%;" +
+                             "  display: flex;" +
+                             "  justify-content: center;" +
+                             "  align-items: center;" +
+                             "}" +
+                             ".progress {" +
+                             "  width: 300px;" +
+                             "  height: 30px;" +
+                             "  background-color: #ddd;" +
+                             "}" +
+                             ".progress-striped .progress-bar {" +
+                             "  width: 0%;" +
+                             "  height: 100%;" +
+                             "  background-color: #3c6e71;" +
+                             "  background-image: linear-gradient(45deg, #353535 25%, transparent 25%, transparent 50%, #353535 50%, #353535 75%, transparent 75%, transparent);" +
+                             "  animation: progressAnimationStrike 6s infinite;" +
+                             "}" +
+                             "@keyframes progressAnimationStrike {" +
+                             "  0% { width: 0; }" +
+                             "  100% { width: 100%; }" +
+                             "}" +
+                             "</style>" +
+                             "</head>" +
+                             "<body>" +
+                             "  <div class='progress progress-striped'>" +
+                             "    <div class='progress-bar'></div>" +
+                             "  </div>" +
+                             "</body>" +
+                             "</html>";
+        webEngine.loadContent(htmlContent);
+
+        Scene loadingScene = new Scene(webView, 300, 30);
+        loadingStage.setScene(loadingScene);
+        loadingStage.setTitle("Please wait...");
+        loadingStage.show();
     }
 
 
@@ -581,7 +583,6 @@ public class loginController implements Initializable{
         forgotPassBtn.setDisable(true);
         backToCreateAccount.setDisable(true);
         backToForgotPw.setDisable(true);
-        close.setDisable(true);
         closeButton.setDisable(true);
         createButton.setDisable(true);
         forgotPassword_close.setDisable(true);
@@ -597,7 +598,6 @@ public class loginController implements Initializable{
         forgotPassBtn.setDisable(false);
         backToCreateAccount.setDisable(false);
         backToForgotPw.setDisable(false);
-        close.setDisable(false);
         closeButton.setDisable(false);
         createButton.setDisable(false);
         forgotPassword_close.setDisable(false);
