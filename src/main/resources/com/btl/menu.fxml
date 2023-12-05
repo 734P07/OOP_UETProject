@@ -123,7 +123,7 @@
                <center>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="home_form" layoutX="44.0" layoutY="61.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="home_form" layoutX="44.0" layoutY="61.0" prefHeight="555.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="15.0" prefHeight="526.0" prefWidth="862.0" stylesheets="@menuDesign.css">
                                  <children>
@@ -218,7 +218,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="search_form" layoutX="44.0" layoutY="65.0" prefHeight="555.0" prefWidth="889.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="search_form" layoutX="44.0" layoutY="65.0" prefHeight="555.0" prefWidth="889.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="28.0" layoutY="25.0" prefHeight="506.0" prefWidth="399.0" stylesheets="@menuDesign.css">
                                  <styleClass>
@@ -317,9 +317,9 @@
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font></TextArea>
-                                    <Button fx:id="translate_swapBtn" layoutX="414.0" layoutY="16.0" mnemonicParsing="false" onAction="#translateSwap">
+                                    <Button fx:id="translate_swapBtn" layoutX="414.0" layoutY="16.0" mnemonicParsing="false" onAction="#translateSwap" style="-fx-background-color: #219a6b;" styleClass="btn" stylesheets="@menuDesign.css">
                                        <graphic>
-                                          <FontAwesomeIconView glyphName="EXCHANGE" size="1.5em" />
+                                          <FontAwesomeIconView fill="WHITE" glyphName="EXCHANGE" size="1.5em" />
                                        </graphic>
                                     </Button>
                                     <Label fx:id="translate_beforeLanguage" alignment="CENTER" layoutX="30.0" layoutY="20.0" prefHeight="18.0" prefWidth="380.0" text="English" textAlignment="CENTER">
@@ -336,7 +336,7 @@
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font></TextArea>
-                                    <Button fx:id="translate_translateBtn" layoutX="756.0" layoutY="484.0" mnemonicParsing="false" onAction="#translateTranslate" text="Translate">
+                                    <Button fx:id="translate_translateBtn" layoutX="756.0" layoutY="484.0" mnemonicParsing="false" onAction="#translateTranslate" style="-fx-background-color: #219a6b;" styleClass="btn" stylesheets="@menuDesign.css" text="Translate" textFill="WHITE">
                                        <font>
                                           <Font name="Tahoma" size="14.0" />
                                        </font>
