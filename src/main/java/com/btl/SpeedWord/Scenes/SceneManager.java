@@ -5,6 +5,8 @@
 package com.btl.SpeedWord.Scenes;
 
 import com.btl.SpeedWord.Core.Engine;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 
 import java.util.Stack;
 
@@ -51,4 +53,5 @@ public class SceneManager {
     public Stack<CustomScene> getGameScene() {
         return gameScene;
     }
+
 }
